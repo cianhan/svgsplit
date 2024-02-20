@@ -1,0 +1,5 @@
+<!doctype html>
+<title>Download Processed Files</title>
+<h1>Download Processed Files</h1>
+<p>Processed file: <a href="{{ url_for('processed_file', filename=filename) }}">{{ filename }}</a></p>
+<p>Original file: <a href="{{ url_for('uploaded_file', filename=filename) }}">{{ filename }}</a></p>
