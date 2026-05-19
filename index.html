@@ -1,10 +1,578 @@
-<!doctype html>
-<title>SVG Processing Web App</title>
-<h1>SVG Processing Web App</h1>
-{% if error %}
-  <p style="color: red;">{{ error }}</p>
-{% endif %}
-<form action="/" method="post" enctype="multipart/form-data">
-  <input type="file" name="file">
-  <input type="submit" value="Upload and Process">
-</form>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SVG Path Splitter & Packager</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- JSZip for client-side ZIP generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen font-sans flex flex-col antialiased">
+
+    <!-- Header -->
+    <header class="border-b border-slate-800 bg-slate-950/50 backdrop-blur-sm sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <div class="bg-indigo-600 text-white p-2 rounded-lg shadow-lg shadow-indigo-500/30">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.121 14.121L19 19m-7-7h7m-7-7h7M3 10a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H4a1 1 0 01-1-1v-4zm0-7a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H4a1 1 0 01-1-1V3zm0 14a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H4a1 1 0 01-1-1v-4z"/>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold tracking-tight text-white">SVG Path Splitter</h1>
+                    <p class="text-xs text-slate-400">100% Local • No Server Uploads • Private & Fast</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2 text-xs bg-slate-850 px-3 py-1.5 rounded-full border border-slate-800">
+                <span class="inline-block w-2.5 h-2.5 bg-emerald-500 rounded-full animate-pulse"></span>
+                <span class="text-slate-300 font-medium">Browser-Native processing</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow max-w-6xl w-full mx-auto px-4 py-8">
+        
+        <!-- Error Banner Container -->
+        <div id="errorBanner" class="hidden mb-6 p-4 bg-rose-500/15 border border-rose-500/30 text-rose-200 rounded-xl flex items-start gap-3">
+            <svg class="w-5 h-5 text-rose-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+            </svg>
+            <div class="flex-grow">
+                <h4 class="font-semibold text-sm">Processing Error</h4>
+                <p id="errorMessage" class="text-xs text-rose-300 mt-1"></p>
+            </div>
+            <button onclick="hideError()" class="text-rose-400 hover:text-rose-200">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+
+        <!-- Two-Column Layout -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            
+            <!-- Left Column: Controls and Upload -->
+            <div class="lg:col-span-5 flex flex-col gap-6">
+                
+                <!-- Upload Panel -->
+                <div class="bg-slate-950/40 border border-slate-800 rounded-2xl p-6 shadow-xl">
+                    <h3 class="text-sm font-semibold uppercase tracking-wider text-indigo-400 mb-4">1. Import File</h3>
+                    
+                    <div id="dropzone" class="border-2 border-dashed border-slate-700 hover:border-indigo-500 hover:bg-slate-900/30 transition-all rounded-xl p-8 text-center cursor-pointer group flex flex-col items-center justify-center">
+                        <input type="file" id="fileInput" accept=".svg" class="hidden" />
+                        <div class="p-4 bg-slate-900 rounded-full border border-slate-800 text-slate-400 group-hover:text-indigo-400 group-hover:scale-110 transition-transform mb-4 shadow-inner">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
+                            </svg>
+                        </div>
+                        <p class="text-sm font-medium text-slate-200 mb-1">Drag & drop your SVG here</p>
+                        <p class="text-xs text-slate-500 mb-3">or click to browse your computer</p>
+                        <span class="inline-block bg-slate-900 text-slate-400 text-[10px] font-mono px-2.5 py-1 rounded-full border border-slate-800">Supports .svg files only</span>
+                    </div>
+
+                    <!-- File Details -->
+                    <div id="fileDetails" class="hidden mt-4 p-3 bg-slate-900/50 border border-slate-800 rounded-xl flex items-center justify-between">
+                        <div class="flex items-center gap-3 min-w-0">
+                            <div class="text-indigo-400">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                                </svg>
+                            </div>
+                            <div class="truncate">
+                                <p id="loadedFileName" class="text-xs font-semibold text-slate-200 truncate">filename.svg</p>
+                                <p id="loadedFileSize" class="text-[10px] text-slate-500">0.00 KB</p>
+                            </div>
+                        </div>
+                        <button id="removeFileBtn" class="text-slate-500 hover:text-rose-400 p-1 rounded-lg hover:bg-slate-800/50 transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Settings Panel -->
+                <div class="bg-slate-950/40 border border-slate-800 rounded-2xl p-6 shadow-xl">
+                    <h3 class="text-sm font-semibold uppercase tracking-wider text-indigo-400 mb-4">2. Splitting Rules</h3>
+                    
+                    <div class="space-y-4">
+                        <!-- Max Size Setting -->
+                        <div>
+                            <label for="maxKbInput" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Maximum File Size (KB)</label>
+                            <div class="relative rounded-xl shadow-sm">
+                                <input type="number" id="maxKbInput" value="15" min="1" step="1" class="w-full bg-slate-900 border border-slate-850 rounded-xl px-4 py-3 text-sm font-medium text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500" />
+                                <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
+                                    <span class="text-slate-500 text-xs font-semibold">KB</span>
+                                </div>
+                            </div>
+                            <p class="text-[10px] text-slate-500 mt-1.5 leading-relaxed">Paths are grouped sequentially. If a single path exceeds this size, it is written in its own file.</p>
+                        </div>
+
+                        <!-- Output Prefix -->
+                        <div>
+                            <label for="prefixInput" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Output Prefix</label>
+                            <input type="text" id="prefixInput" placeholder="split_result_" class="w-full bg-slate-900 border border-slate-850 rounded-xl px-4 py-3 text-sm font-medium text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500" />
+                            <p class="text-[10px] text-slate-500 mt-1.5">Suffix (e.g., <code class="bg-slate-900 px-1 rounded text-slate-300">_part_1.svg</code>) will be appended automatically.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Process / Download Action Cards -->
+                <button id="processBtn" disabled class="w-full py-4 px-6 bg-slate-800 text-slate-500 rounded-2xl font-semibold tracking-wide flex items-center justify-center gap-2 cursor-not-allowed transition-all duration-150">
+                    <span>Analyze & Split Paths</span>
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                </button>
+            </div>
+
+            <!-- Right Column: Results & Previews -->
+            <div class="lg:col-span-7">
+                
+                <!-- Initial State Placeholder -->
+                <div id="emptyResultState" class="bg-slate-950/20 border-2 border-dashed border-slate-800/60 rounded-2xl p-12 text-center flex flex-col items-center justify-center h-full min-h-[350px]">
+                    <div class="text-slate-700 mb-4">
+                        <svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.5 12c0-1.232-.046-2.453-.138-3.662a4.006 4.006 0 00-3.7-3.7 48.678 48.678 0 00-7.324 0 4.006 4.006 0 00-3.7 3.7c-.017.22-.032.441-.046.662M19.5 12l3-3m-3 3l-3-3m-12 3c0 1.232.046 2.453.138 3.662a4.006 4.006 0 003.7 3.7 48.656 48.656 0 007.324 0 4.006 4.006 0 003.7-3.7c.017-.22.032-.441.046-.662M4.5 12l3 3m-3-3l-3 3"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-base font-semibold text-slate-400">Ready to Split</h3>
+                    <p class="text-xs text-slate-500 max-w-sm mt-1 leading-relaxed">Upload an SVG file on the left, set your parameters, and start processing to view splitting details and obtain downloads.</p>
+                </div>
+
+                <!-- Active Processing & Results Display -->
+                <div id="resultsPanel" class="hidden flex flex-col gap-6">
+                    
+                    <!-- Stats Card -->
+                    <div class="bg-indigo-950/30 border border-indigo-500/20 rounded-2xl p-6 shadow-xl flex flex-col md:flex-row gap-6 md:divide-x md:divide-indigo-500/20">
+                        <div class="flex-grow flex flex-col justify-center">
+                            <h4 class="text-xs font-semibold uppercase tracking-wider text-indigo-400">Total Chunks Generated</h4>
+                            <p id="statTotalChunks" class="text-4xl font-extrabold text-white mt-1">0</p>
+                            <p class="text-[10px] text-indigo-300/60 mt-1">Ready for individual or batch downloading</p>
+                        </div>
+                        <div class="md:pl-6 flex-grow flex flex-col justify-center">
+                            <h4 class="text-xs font-semibold uppercase tracking-wider text-indigo-400">Source Stats</h4>
+                            <div class="mt-2 space-y-1 text-xs font-medium text-slate-300">
+                                <div class="flex justify-between">
+                                    <span>Total Path Elements:</span>
+                                    <span id="statSourcePaths" class="text-white font-mono">0</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span>Average Chunk Size:</span>
+                                    <span id="statAverageSize" class="text-white font-mono">0 KB</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Batch Actions -->
+                    <div class="flex items-center justify-between p-4 bg-slate-950/40 border border-slate-800 rounded-xl">
+                        <div class="text-xs text-slate-400 font-semibold">Output Files Listing</div>
+                        <button id="downloadZipBtn" class="py-2.5 px-5 bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white rounded-lg text-sm font-semibold flex items-center gap-2 shadow-lg shadow-indigo-500/20 transition-all">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                            </svg>
+                            <span>Download All as ZIP</span>
+                        </button>
+                    </div>
+
+                    <!-- Previews / Chunk List -->
+                    <div id="chunksContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar">
+                        <!-- Filled dynamically with chunk cards -->
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Deployment Info Footer -->
+        <div class="mt-16 pt-8 border-t border-slate-850/60 text-center max-w-3xl mx-auto">
+            <h4 class="text-sm font-semibold text-slate-300 mb-2">Want to deploy this utility on your own GitHub?</h4>
+            <p class="text-xs text-slate-500 leading-relaxed mb-4">You can easily host this exact tool as a personal service webpage for free. Refer to the step-by-step instructions provided in the Canvas panel on the right side of the screen!</p>
+            <div class="inline-flex items-center gap-2 text-xs font-semibold text-indigo-400 bg-indigo-950/20 border border-indigo-500/10 px-4 py-2 rounded-full">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                <span>Fully client-side • Built using vanilla JS and HTML5</span>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-950 border-t border-slate-850 py-6 mt-12 text-center text-xs text-slate-500">
+        <p>© 2026 Web SVG Path Splitter • Free & Open Source utility</p>
+    </footer>
+
+    <!-- Custom Styling for Scrollbar -->
+    <style>
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #0b1329;
+            border-radius: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #334155;
+        }
+    </style>
+
+    <!-- Main Logic -->
+    <script>
+        // DOM Elements
+        const dropzone = document.getElementById('dropzone');
+        const fileInput = document.getElementById('fileInput');
+        const fileDetails = document.getElementById('fileDetails');
+        const loadedFileName = document.getElementById('loadedFileName');
+        const loadedFileSize = document.getElementById('loadedFileSize');
+        const removeFileBtn = document.getElementById('removeFileBtn');
+        const maxKbInput = document.getElementById('maxKbInput');
+        const prefixInput = document.getElementById('prefixInput');
+        const processBtn = document.getElementById('processBtn');
+        const emptyResultState = document.getElementById('emptyResultState');
+        const resultsPanel = document.getElementById('resultsPanel');
+        const statTotalChunks = document.getElementById('statTotalChunks');
+        const statSourcePaths = document.getElementById('statSourcePaths');
+        const statAverageSize = document.getElementById('statAverageSize');
+        const chunksContainer = document.getElementById('chunksContainer');
+        const downloadZipBtn = document.getElementById('downloadZipBtn');
+        const errorBanner = document.getElementById('errorBanner');
+        const errorMessage = document.getElementById('errorMessage');
+
+        let rawSvgContent = "";
+        let originalFileName = "";
+        let splitChunks = []; // Array of { content: string, size: number, pathsCount: number, filename: string }
+
+        // Drag & Drop event listeners
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropzone.addEventListener(eventName, (e) => {
+                e.preventDefault();
+                dropzone.classList.add('border-indigo-500', 'bg-slate-900/30');
+            }, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropzone.addEventListener(eventName, (e) => {
+                e.preventDefault();
+                dropzone.classList.remove('border-indigo-500', 'bg-slate-900/30');
+            }, false);
+        });
+
+        dropzone.addEventListener('drop', (e) => {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            if (files.length) handleFile(files[0]);
+        });
+
+        dropzone.addEventListener('click', () => fileInput.click());
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length) handleFile(e.target.files[0]);
+        });
+
+        removeFileBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            resetInputs();
+        });
+
+        // Setup File Handler
+        function handleFile(file) {
+            hideError();
+            if (!file.name.endsWith('.svg')) {
+                showError("Unsupported file type. Please upload a file ending with '.svg'.");
+                return;
+            }
+
+            originalFileName = file.name;
+            const baseName = originalFileName.replace(/\.svg$/i, '');
+            
+            // Set defaults in inputs based on input file name
+            prefixInput.value = `${baseName}_part_`;
+            loadedFileName.textContent = file.name;
+            loadedFileSize.textContent = (file.size / 1024).toFixed(2) + " KB";
+
+            // Read content
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                rawSvgContent = e.target.result;
+                
+                // Show file info card, update UI
+                fileDetails.classList.remove('hidden');
+                dropzone.classList.add('hidden');
+                processBtn.disabled = false;
+                processBtn.classList.remove('bg-slate-800', 'text-slate-500', 'cursor-not-allowed');
+                processBtn.classList.add('bg-indigo-600', 'hover:bg-indigo-500', 'text-white', 'cursor-pointer', 'shadow-lg', 'shadow-indigo-500/25');
+            };
+            reader.readAsText(file);
+        }
+
+        function resetInputs() {
+            fileInput.value = "";
+            rawSvgContent = "";
+            originalFileName = "";
+            splitChunks = [];
+            fileDetails.classList.add('hidden');
+            dropzone.classList.remove('hidden');
+            prefixInput.value = "";
+            
+            processBtn.disabled = true;
+            processBtn.classList.add('bg-slate-800', 'text-slate-500', 'cursor-not-allowed');
+            processBtn.classList.remove('bg-indigo-600', 'hover:bg-indigo-500', 'text-white', 'cursor-pointer', 'shadow-lg', 'shadow-indigo-500/25');
+            
+            emptyResultState.classList.remove('hidden');
+            resultsPanel.classList.add('hidden');
+            hideError();
+        }
+
+        // Process button handler
+        processBtn.addEventListener('click', () => {
+            if (!rawSvgContent) return;
+            hideError();
+
+            const maxKb = parseFloat(maxKbInput.value);
+            if (isNaN(maxKb) || maxKb <= 0) {
+                showError("Please specify a valid, positive maximum size in KB.");
+                return;
+            }
+
+            const maxBytes = maxKb * 1024;
+            const outputPrefix = prefixInput.value.trim() || "output_part_";
+
+            try {
+                // Parse the SVG document using DOMParser
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(rawSvgContent, "image/svg+xml");
+                const svgElement = doc.querySelector("svg");
+
+                if (!svgElement) {
+                    showError("Invalid SVG format: No main <svg> tag could be detected.");
+                    return;
+                }
+
+                // Clone the outer svg node structure (excluding all internal elements)
+                const svgShell = svgElement.cloneNode(false);
+                
+                // CRITICAL FIX: Add a temporary comment node inside the cloned shell.
+                // This forces XMLSerializer to output a distinct opening '<svg>' and closing '</svg>' tag
+                // instead of formatting it as a self-closing element '<svg ... />' which triggers XML parser errors.
+                const tempComment = doc.createComment("placeholder");
+                svgShell.appendChild(tempComment);
+
+                const serializer = new XMLSerializer();
+                const serializedShell = serializer.serializeToString(svgShell);
+                
+                // Split at the placeholder comment to get only the valid opening tag
+                const svgHeader = serializedShell.split('<!--placeholder-->')[0];
+                const svgFooter = '</svg>';
+
+                // Gather all child <path> elements
+                const pathElements = Array.from(doc.querySelectorAll('path'));
+                if (pathElements.length === 0) {
+                    showError("No <path> elements found inside the uploaded SVG file.");
+                    return;
+                }
+
+                const encoder = new TextEncoder();
+                const getByteSize = (str) => encoder.encode(str).length;
+
+                // Function to build safe multi-byte safe chunk files
+                function calculateSize(pathsArray) {
+                    const content = svgHeader + "\n" + pathsArray.join("\n") + "\n" + svgFooter;
+                    return getByteSize(content);
+                }
+
+                // Extract outer string representation of each path and strip redundant xmlns attributes
+                const pathStrings = pathElements.map(path => {
+                    const serializedPath = serializer.serializeToString(path);
+                    // Remove both single and double-quoted XML namespaces from the serialized path
+                    return serializedPath.replace(/\s*xmlns=(['"])http:\/\/www\.w3\.org\/2000\/svg\1/gi, '');
+                });
+                
+                splitChunks = [];
+                let currentGroup = [];
+                let fileCounter = 1;
+
+                function commitGroup(group) {
+                    const fileContent = svgHeader + "\n" + group.join("\n") + "\n" + svgFooter;
+                    const finalSize = getByteSize(fileContent);
+                    const chunkFilename = `${outputPrefix}${fileCounter}.svg`;
+                    
+                    splitChunks.push({
+                        filename: chunkFilename,
+                        content: fileContent,
+                        size: finalSize,
+                        pathsCount: group.length
+                    });
+                    fileCounter++;
+                }
+
+                for (let i = 0; i < pathStrings.length; i++) {
+                    const pathStr = pathStrings[i];
+
+                    if (currentGroup.length === 0) {
+                        const singlePathSize = calculateSize([pathStr]);
+                        if (singlePathSize > maxBytes) {
+                            // Write immediately as is
+                            commitGroup([pathStr]);
+                        } else {
+                            currentGroup.push(pathStr);
+                        }
+                        continue;
+                    }
+
+                    const tempGroup = [...currentGroup, pathStr];
+                    const potentialSize = calculateSize(tempGroup);
+
+                    if (potentialSize <= maxBytes) {
+                        currentGroup.push(pathStr);
+                    } else {
+                        // Current group is full, write it
+                        commitGroup(currentGroup);
+                        
+                        // Check if the current single path exceeds limit itself
+                        const singlePathSize = calculateSize([pathStr]);
+                        if (singlePathSize > maxBytes) {
+                            commitGroup([pathStr]);
+                            currentGroup = [];
+                        } else {
+                            currentGroup = [pathStr];
+                        }
+                    }
+                }
+
+                // Push any remaining paths left inside the stack
+                if (currentGroup.length > 0) {
+                    commitGroup(currentGroup);
+                }
+
+                // Render results in screen
+                displayResults(pathElements.length);
+
+            } catch (err) {
+                showError("An unexpected error occurred during splitting: " + err.message);
+                console.error(err);
+            }
+        });
+
+        // UI rendering for the results
+        function displayResults(totalPaths) {
+            emptyResultState.classList.add('hidden');
+            resultsPanel.classList.remove('hidden');
+
+            statTotalChunks.textContent = splitChunks.length;
+            statSourcePaths.textContent = totalPaths;
+
+            let totalSizeSum = 0;
+            chunksContainer.innerHTML = "";
+
+            splitChunks.forEach((chunk, index) => {
+                totalSizeSum += chunk.size;
+                const sizeKb = chunk.size / 1024;
+                const isOverLimit = chunk.size > (parseFloat(maxKbInput.value) * 1024);
+
+                const card = document.createElement('div');
+                card.className = "bg-slate-900 border border-slate-800 rounded-xl p-4 flex flex-col justify-between gap-4 shadow-md";
+                
+                card.innerHTML = `
+                    <div>
+                        <div class="flex items-center justify-between gap-2">
+                            <h5 class="text-xs font-bold text-slate-200 truncate pr-2" title="${chunk.filename}">${chunk.filename}</h5>
+                            <span class="text-[9px] px-2 py-0.5 rounded-full font-semibold ${isOverLimit ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'}">
+                                ${isOverLimit ? 'Overlimit' : 'Verified'}
+                            </span>
+                        </div>
+                        <div class="flex items-center gap-4 text-[10px] text-slate-500 mt-1 font-medium">
+                            <span>Size: <strong class="text-slate-300 font-mono">${sizeKb.toFixed(2)} KB</strong></span>
+                            <span>Paths: <strong class="text-slate-300 font-mono">${chunk.pathsCount}</strong></span>
+                        </div>
+                    </div>
+                    
+                    <!-- Small SVG Sandbox Render Preview -->
+                    <div class="w-full h-24 bg-slate-950 border border-slate-850 rounded-lg overflow-hidden flex items-center justify-center p-2 relative group-preview">
+                        <div class="w-full h-full max-w-full max-h-full flex items-center justify-center preview-wrapper">
+                            ${chunk.content}
+                        </div>
+                        <div class="absolute inset-0 bg-slate-950/80 opacity-0 group-preview-hover:opacity-100 flex items-center justify-center text-[10px] text-slate-400 font-medium transition-opacity pointer-events-none">
+                            Visual Preview
+                        </div>
+                    </div>
+
+                    <button class="w-full py-2 px-3 bg-slate-800 hover:bg-slate-750 text-slate-200 hover:text-white rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors" onclick="downloadSingleFile(${index})">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                        </svg>
+                        <span>Download SVG</span>
+                    </button>
+                `;
+
+                // Quick cleanup inside sandbox SVG rendering to ensure it fits perfectly inside container
+                const svgPreview = card.querySelector('.preview-wrapper svg');
+                if (svgPreview) {
+                    svgPreview.setAttribute('width', '100%');
+                    svgPreview.setAttribute('height', '100%');
+                }
+
+                chunksContainer.appendChild(card);
+            });
+
+            const avgSize = (totalSizeSum / splitChunks.length) / 1024;
+            statAverageSize.textContent = `${avgSize.toFixed(2)} KB`;
+        }
+
+        // Action: Download single File
+        window.downloadSingleFile = function(index) {
+            const chunk = splitChunks[index];
+            if (!chunk) return;
+
+            const blob = new Blob([chunk.content], { type: "image/svg+xml;charset=utf-8" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = chunk.filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        };
+
+        // Action: Download ZIP of all elements
+        downloadZipBtn.addEventListener('click', async () => {
+            if (splitChunks.length === 0) return;
+
+            const zip = new JSZip();
+            splitChunks.forEach(chunk => {
+                zip.file(chunk.filename, chunk.content);
+            });
+
+            try {
+                const content = await zip.generateAsync({ type: "blob" });
+                const baseName = originalFileName.replace(/\.svg$/i, '') || "split_svg_collection";
+                const zipFilename = `${baseName}_split_package.zip`;
+
+                const url = URL.createObjectURL(content);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = zipFilename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            } catch (err) {
+                showError("Could not compile the zip archive: " + err.message);
+            }
+        });
+
+        // Error message banner handling (avoiding alert)
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorBanner.classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function hideError() {
+            errorBanner.classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
