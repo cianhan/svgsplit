@@ -222,7 +222,7 @@
         const prefixInput = document.getElementById('prefixInput');
         const processBtn = document.getElementById('processBtn');
         const emptyResultState = document.getElementById('emptyResultState');
-        const ClubPanel = document.getElementById('resultsPanel');
+        const resultsPanel = document.getElementById('resultsPanel');
         const statTotalChunks = document.getElementById('statTotalChunks');
         const statSourcePaths = document.getElementById('statSourcePaths');
         const statAverageSize = document.getElementById('statAverageSize');
@@ -315,6 +315,64 @@
             hideError();
         }
 
+        // Recursive tree flattener to propagate `<g>` styles/transforms onto `<path>` statements
+        function flattenNode(node, parentAttrs = {}, parentTransform = "") {
+            if (node.nodeType !== 1) return; // Process only element nodes
+            const tagName = node.tagName.toLowerCase();
+
+            // 1. Calculate the accumulated transform string
+            let currentTransform = parentTransform;
+            if (node.hasAttribute("transform")) {
+                const localTransform = node.getAttribute("transform");
+                currentTransform = currentTransform ? `${currentTransform} ${localTransform}` : localTransform;
+            }
+
+            // 2. Merge style strings
+            let currentStyle = "";
+            if (parentAttrs.style || node.hasAttribute("style")) {
+                const parentStyle = parentAttrs.style || "";
+                const localStyle = node.getAttribute("style") || "";
+                // Parent styles are combined with child styles; cascading will naturally resolve overrides
+                currentStyle = [parentStyle, localStyle].filter(Boolean).join("; ");
+            }
+
+            // 3. Keep track of inheritable properties (excluding non-inheritable ones)
+            const ignorableAttrs = ["id", "transform", "style"];
+            const inherited = { ...parentAttrs };
+            if (currentStyle) {
+                inherited.style = currentStyle;
+            }
+
+            // 4. Handle paths & groups accordingly
+            if (tagName === 'path') {
+                // Apply inherited attributes to the path if it doesn't already have them explicitly
+                for (const [key, val] of Object.entries(inherited)) {
+                    if (key === 'style') {
+                        node.setAttribute('style', val);
+                    } else if (!node.hasAttribute(key)) {
+                        node.setAttribute(key, val);
+                    }
+                }
+                // Write the complete accumulated transform stack
+                if (currentTransform) {
+                    node.setAttribute("transform", currentTransform);
+                }
+            } else if (tagName === 'g') {
+                // Harvest non-ignorable attributes from this group to propagate to children
+                for (const attr of Array.from(node.attributes)) {
+                    if (!ignorableAttrs.includes(attr.name)) {
+                        inherited[attr.name] = attr.value;
+                    }
+                }
+            }
+
+            // 5. Recurse down all children
+            const children = Array.from(node.childNodes);
+            for (const child of children) {
+                flattenNode(child, inherited, currentTransform);
+            }
+        }
+
         // Process button handler
         processBtn.addEventListener('click', () => {
             if (!rawSvgContent) return;
@@ -340,6 +398,9 @@
                     return;
                 }
 
+                // 1. Traverse and flatten the SVG hierarchy, pushing group properties to the path nodes
+                flattenNode(svgElement);
+
                 // Clone the outer svg node structure (excluding all internal elements)
                 const svgShell = svgElement.cloneNode(false);
                 
@@ -356,7 +417,7 @@
                 const svgHeader = serializedShell.split('<!--placeholder-->')[0];
                 const svgFooter = '</svg>';
 
-                // Gather all child <path> elements
+                // Gather all child <path> elements (they are now fully self-contained and styled!)
                 const pathElements = Array.from(doc.querySelectorAll('path'));
                 if (pathElements.length === 0) {
                     showError("No <path> elements found inside the uploaded SVG file.");
