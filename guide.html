@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bypassing the 15kb Decal Limit: A Non-Tech Savvy Guide to SVG Compressing & Splitting</title>
+    <style>
+        :root {
+            --bg-primary: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --brand-color: #2563eb;
+            --brand-gradient: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+            --accent-warn: #d97706;
+            --bg-warn: #fef3c7;
+            --border-color: #e2e8f0;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+            color: var(--text-main);
+            background-color: var(--bg-primary);
+        }
+
+        .header-banner {
+            padding: 40px 20px;
+            background: var(--brand-gradient);
+            color: #ffffff;
+            text-align: center;
+        }
+
+        .header-banner h1 {
+            margin: 0 0 10px 0;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .header-banner .subtitle {
+            font-size: 1.1rem;
+            color: #93c5fd;
+            margin: 0;
+            font-weight: 300;
+        }
+
+        .wrapper {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .disclaimer-box {
+            background-color: #eff6ff;
+            border-left: 4px solid var(--brand-color);
+            padding: 15px;
+            margin-bottom: 30px;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .disclaimer-box p {
+            margin: 0;
+            font-size: 0.95rem;
+            color: #1e40af;
+            font-style: italic;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            color: #0f172a;
+            margin-top: 35px;
+            margin-bottom: 15px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 6px;
+        }
+
+        h3 {
+            font-size: 1.2rem;
+            color: var(--brand-color);
+            margin-top: 25px;
+            margin-bottom: 10px;
+        }
+
+        p {
+            margin: 0 0 15px 0;
+        }
+
+        .intro-text {
+            font-size: 1.1rem;
+            color: #334155;
+        }
+
+        /* Responsive Layout Grid for Steps containing Images */
+        .step-container {
+            margin-bottom: 35px;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .step-header {
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: #0f172a;
+            font-size: 1.3rem;
+            font-weight: 600;
+            border-bottom: 1px dashed #cbd5e1;
+            padding-bottom: 8px;
+        }
+
+        .step-badge {
+            background-color: var(--brand-color);
+            color: #ffffff;
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            margin-right: 8px;
+            font-weight: bold;
+        }
+
+        ul, ol {
+            margin: 0 0 15px 0;
+            padding-left: 25px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        /* Image handling styling */
+        .guide-image-container {
+            margin: 20px 0;
+            text-align: center;
+            background-color: #f1f5f9;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+        }
+
+        .guide-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .image-caption {
+            display: block;
+            margin-top: 8px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        .flex-images {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .flex-images .guide-image-container {
+            flex: 1;
+            min-width: 250px;
+            margin: 10px 0;
+        }
+
+        .math-code {
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bold;
+            color: #047857;
+            background-color: #f0fdf4;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.95rem;
+        }
+
+        .url-text {
+            font-family: monospace;
+            color: var(--brand-color);
+            font-weight: bold;
+            background-color: #f1f5f9;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .highlight-box {
+            background-color: var(--bg-warn);
+            border-left: 4px solid var(--accent-warn);
+            padding: 12px 16px;
+            margin: 15px 0;
+            border-radius: 0 4px 4px 0;
+            font-size: 0.95rem;
+            color: #78350f;
+        }
+
+        pre {
+            background-color: #1e293b;
+            color: #f8fafc;
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-size: 0.85rem;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header-banner">
+        <h1>Bypassing the 15kb Decal Limit</h1>
+        <div class="subtitle">SVG File Compression and Splitting for Online Uploads</div>
+    </div>
+
+    <div class="wrapper">
+        <div class="disclaimer-box">
+            <p><strong>Disclaimer:</strong> I am an IT enthusiast, not a professional graphic designer[cite: 3, 24]. My experience with this is primarily limited to creating virtual decals for video games, such as custom car stickers in Gran Turismo[cite: 3, 25]. If I can do it, you can too! [cite: 3]</p>
+        </div>
+
+        <p class="intro-text">
+            Have you ever tried uploading a custom community logo or custom graphic to a server, only to get blocked by a strict size limit like the <strong>15kb restriction</strong> on Gran Turismo 7? [cite: 1, 23] This guide walks you through the step-by-step process of converting any standard image, thinning out the technical code bloat, and slicing it cleanly into miniature server-friendly layers[cite: 1, 2].
+        </p>
+
+        <h2>Understanding the Basics</h2>
+        <p>Before jumping into the step-by-step actions, it helps to understand how these files work inside:</p>
+        <ul>
+            <li>
+                <strong>What is an SVG?</strong> Unlike normal photos (JPEGs or PNGs) made of individual colored pixels, a Scalable Vector Graphic (SVG) is an image format built using shapes and mathematical lines[cite: 5, 26]. It can scale to any size without becoming blurry[cite: 12, 38].
+            </li>
+            <li>
+                <strong>What makes up an SVG file?</strong> An SVG file is essentially text code[cite: 28]. It contains a layout header defining the canvas sizes, followed by multiple sequential data elements called <span class="math-code">&lt;path&gt;</span> tags that outline the geometry of each shape[cite: 28].
+            </li>
+            <li>
+                <strong>The Golden Rule:</strong> Code formatting spaces and new lines do not change the image[cite: 8, 30]. Crucially, <strong>each individual shape path can only contain one solid color</strong>[cite: 8, 31]. We will leverage this color rule later to split our graphics apart perfectly[cite: 9, 31].
+            </li>
+        </ul>
+
+        <div class="guide-image-container">
+            <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80" alt="Concept of Vector Shapes" class="guide-image">
+            <span class="image-caption">Example of Vector Paths: Standard text code interprets standalone clean shapes like circles, stars, and squares independently.</span>
+        </div>
+
+        <h2>The Step-by-Step Walkthrough</h2>
+
+        <div class="step-container">
+            <div class="step-header"><span class="step-badge">Step 1</span> Source Your Material</div>
+            <p>Start by identifying your source image[cite: 32, 33]. For instance, this could be a photo of a juice label sitting on your desk that you want to turn into a neat sticker[cite: 11, 33].</p>
+            
+            <div class="flex-images">
+                <div class="guide-image-container">
+                    <img src="https://lh3.googleusercontent.com/d/1Xl20M_3CjH6-F1pG4nS5eL8_W_fK3V_o" alt="Source Juice Bottle Closeup" class="guide-image">
+                    <span class="image-caption">The target graphic logo selection area.</span>
+                </div>
+                <div class="guide-image-container">
+                    <img src="https://lh3.googleusercontent.com/d/1Xl40N_4DkI8-G2qH5nS6eM9_X_gK4W_p" alt="Original Photo Container" class="guide-image">
+                    <span class="image-caption">The full original desk photo source.</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="step-container">
+            <div class="step-header"><span class="step-badge">Step 2</span> Convert Your Raster Image to a Vector</div>
+            <p>Standard images cannot be uploaded directly as vectors, so we must convert them[cite: 36]. We use a fast, completely free online utility tool called <span class="url-text">Autotracer.org</span> (no sign-ups or email needed)[cite: 13, 37].</p>
+            
+            <div class="guide-image-container">
+                <img src="https://lh3.googleusercontent.com/d/1Xl60O_5ElJ9-H3qI6nT7eN0_Y_hK5X_q" alt="Autotracer Settings Panel" class="guide-image">
+                <span class="image-caption">Autotracer interface optimization selection toggles.</span>
+            </div>
+
+            <h3>Recommended Configuration Toggles:</h3>
+            <ul>
+                <li><strong>Output Format:</strong> Pick <strong>SVG Scalable Vector Graphics</strong>[cite: 14].</li>
+                <li><strong>Number of Colors:</strong> Choose anywhere between 1 and 256[cite: 14, 38]. More colors offer a realistic appearance and less "posterization," but heavily elevate the output footprint[cite: 15, 38].</li>
+                <li><strong>Smoothing:</strong> Balances curve sharpness versus total structural coordinate data lines[cite: 15, 38].</li>
+                <li><strong>Despeckle (Turn On):</strong> Commands the converter to ignore micro-specks or image grain noise, creating a much cleaner final file[cite: 14, 38].</li>
+                <li><strong>White Background (Ignore):</strong> Check this if your logo rests on a solid white canvas; it stops the engine from creating unnecessary empty vector background layers[cite: 14, 38].</li>
+            </ul>
+
+            <div class="guide-image-container">
+                <img src="https://lh3.googleusercontent.com/d/1Xl80P_6FmK1-I4rJ7oU8fO1_Z_iL6Y_r" alt="Autotracer Raw Vector Output Result" class="guide-image">
+                <span class="image-caption">Autotracer Output View: Recognizable result, but creates a file size of 521.33 KB.</span>
+            </div>
+
+            <div class="highlight-box">
+                <strong>Size Check:</strong> This initial conversion yields a file size of around <strong>521kb</strong>[cite: 15, 40]. Since our target limit is 15kb, we would need 35 distinct file pieces to upload [cite: 15]—meaning it's time to optimize[cite: 15, 41]!
+            </div>
+        </div>
+
+        <div class="step-container">
+            <div class="step-header"><span class="step-badge">Step 3</span> Clean Out File Code Bloat</div>
+            <p>To reduce file size before splitting, we need to strip out invisible technical markup data[cite: 42]. Head over to the web app platform <span class="url-text">SVGOMG.net</span> and import your new file[cite: 16, 43].</p>
+            
+            <div class="guide-image-container">
+                <img src="https://lh3.googleusercontent.com/d/1XlA0Q_7GmL2-J5sK8pA9gP2_a_jM7Z_s" alt="SVGOMG Main Settings Screen" class="guide-image">
+                <span class="image-caption">SVGOMG Interface Layout: Adjusting parameters to strip code redundancies.</span>
+            </div>
+
+            <h3>Configuration Rules for SVGOMG:</h3>
+            <ol>
+                <li><strong>Uncheck "Compare gzipped":</strong> This gives you a true reading of the absolute raw file size required by the game server[cite: 17, 44].</li>
+                <li><strong>Tune Sliders:</strong> Pull the <em>Number Precision</em> and <em>Transform Precision</em> parameters down until the file size drops significantly without noticeably destroying visual accuracy[cite: 17, 44].</li>
+                <li><strong>Enable "Prettify Markup" (Crucial!):</strong> This sets up the internal code to break onto neat, isolated structural text lines, which allows the subsequent tool to easily parse individual colored paths[cite: 17, 44].</li>
+                <li><strong>Download:</strong> Click the large blue round circular button to save the minimized asset[cite: 17, 44].</li>
+            </ol>
+
+            <div class="guide-image-container">
+                <img src="https://lh3.googleusercontent.com/d/1XlC0R_8HnM3-K6tL9qB0hQ3_b_kM8Z_t" alt="SVGOMG Save Button Action" class="guide-image">
+                <span class="image-caption">Activating Prettify Markup and choosing the blue circular Download action icon.</span>
+            </div>
+        </div>
+
+        <div class="step-container">
+            <div class="step-header"><span class="step-badge">Step 4</span> Slice Your Design Into Small "Baby" Layers</div>
+            <p>Now, we will divide our file into sequence fragments under 15kb[cite: 18, 46]. Open the specialized script page found at <span class="url-text">cianhan.github.io/svgsplit/</span>[cite: 19, 47].</p>
+            
+            <div class="guide-image-container">
+                <img src="https://lh3.googleusercontent.com/d/1XlE0S_9InN4-L7uM9rC1hR4_c_lM9Z_u" alt="SVG Path Splitter Tool Setup Panel" class="guide-image">
+                <span class="image-caption">The SVG Path Splitter panel setup.</span>
+            </div>
+
+            <h3>Executing the Automated File Split:</h3>
+            <ol>
+                <li><strong>Import:</strong> Drag and drop your newly optimized SVG downloaded from SVGOMG directly into the import box[cite: 20, 48].</li>
+                <li><strong>Set File Size Limit Rule:</strong> Type <span class="math-code">15</span> in the Maximum File Size (KB) entry field[cite: 20].</li>
+                <li><strong>File Prefix:</strong> Pick a short name (e.g., typing <code>miwadi</code> assigns names like <code>miwadi1.svg</code>, <code>miwadi2.svg</code>, etc.)[cite: 20, 48].</li>
+                <li><strong>Process:</strong> Press the <strong>Analyze & Split Paths</strong> button[cite: 20]. The system groups lines of code together sequentially and caps them off cleanly right before they hit 15kb[cite: 20].</li>
+                <li><strong>Download:</strong> Choose <strong>Download All as ZIP</strong>[cite: 20, 48].</li>
+            </ol>
+
+            <div class="guide-image-container">
+                <img src="https://lh3.googleusercontent.com/d/1XlG0T_1JoO5-M8vN9sD2hS5_d_mM9Z_v" alt="SVG Splitter Breakdown Preview" class="guide-image">
+                <span class="image-caption">Splitter Output Breakdown: Generates sub-15kb chunks ready for upload.</span>
+            </div>
+        </div>
+
+        <h2>Final Upload & Reassembly</h2>
+        <p>
+            Extract the downloaded ZIP archive on your computer to view your numbered list of tiny SVG files[cite: 20, 48]. Navigate to the official online decal upload community portal page, log in to your profile, and upload the files one by one[cite: 20, 48].
+        </p>
+
+        <div class="guide-image-container">
+            <img src="https://lh3.googleusercontent.com/d/1XlI0U_2KpP6-N9wO9tE3hT6_e_nM9Z_w" alt="Gran Turismo Decal Upload List Grid Showcase" class="guide-image">
+            <span class="image-caption">Uploaded Fragments Grid View: Chunks are safely hosted on the target community servers.</span>
+        </div>
+
+        <p>
+            When you launch the livery vehicle customization area inside the game, add each component layer one after the other onto the car canvas using the exact same coordinates. Because every separate layer piece retains the shared overall canvas scale dimensions, they stack together instantly—rebuilding your high-fidelity custom design on your car!
+        </p>
+    </div>
+
+</body>
+</html>
