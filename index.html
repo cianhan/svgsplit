@@ -35,6 +35,15 @@
                     <span>GT7 Guide</span>
                 </a>
 
+                <!-- Image Combiner Link -->
+                <a href="combine.html" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 text-xs bg-slate-800 hover:bg-slate-700 active:bg-slate-650 border border-slate-700 px-4 py-2 rounded-full transition-all font-semibold text-slate-200 shadow-md combiner-link">
+                    <svg class="w-4 h-4 text-slate-300 combiner-svg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <rect x="3" y="3" width="12" height="12" rx="2" ry="2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <rect x="9" y="9" width="12" height="12" rx="2" ry="2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span>Image Combiner</span>
+                </a>
+
                 <!-- Accessibility Contrast Switcher -->
                 <button id="contrastToggle" class="flex items-center gap-2 text-xs bg-slate-800 hover:bg-slate-700 active:bg-slate-650 border border-slate-700 px-4 py-2 rounded-full transition-all font-semibold text-slate-200 shadow-md">
                     <svg class="w-4 h-4 text-slate-300 contrast-svg" fill="currentColor" viewBox="0 0 24 24">
@@ -369,6 +378,21 @@
         body.high-contrast .guide-link:hover .guide-svg {
             color: #000000 !important;
         }
+
+        /* High Contrast overrides for the Combiner Link */
+        body.high-contrast .combiner-link {
+            background-color: #000000 !important;
+            color: #ffff00 !important;
+            border: 3px solid #ffffff !important;
+        }
+        body.high-contrast .combiner-link:hover {
+            background-color: #ffffff !important;
+            color: #000000 !important;
+            border-color: #ffffff !important;
+        }
+        body.high-contrast .combiner-link:hover .combiner-svg {
+            color: #000000 !important;
+        }
     </style>
 
     <!-- Main Logic -->
@@ -395,16 +419,11 @@
         const contrastToggle = document.getElementById('contrastToggle');
         const contrastToggleText = document.getElementById('contrastToggleText');
 
-        let rawSvgContent = "";
-        let originalFileName = "";
-        let splitChunks = []; // Array of { content: string, size: number, pathsCount: number, filename: string }
-
         // Contrast Mode toggle logic
         contrastToggle.addEventListener('click', () => {
             const isHighContrast = document.body.classList.toggle('high-contrast');
             contrastToggleText.textContent = isHighContrast ? "Default Contrast" : "Contrast Mode";
             
-            const guideLink = document.querySelector('.guide-link');
             if (isHighContrast) {
                 contrastToggle.classList.add('bg-white', 'text-black', 'border-white');
                 contrastToggle.classList.remove('bg-slate-800', 'text-slate-200', 'border-slate-700');
