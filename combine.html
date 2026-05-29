@@ -4,279 +4,245 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Image Split-Combiner // DevTool</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen font-sans flex flex-col antialiased transition-colors duration-200">
+
+    <!-- Header -->
+    <header class="border-b border-slate-800 bg-slate-950/50 backdrop-blur-sm sticky top-0 z-50 transition-colors duration-200">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <div class="bg-indigo-600 text-white p-2 rounded-lg shadow-lg shadow-indigo-500/30">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.121 14.121L19 19m-7-7h7m-7-7h7M3 10a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H4a1 1 0 01-1-1v-4z"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold tracking-tight text-white animate-contrast">SVG Path Splitter</h1>
+                    <p class="text-xs text-slate-400">100% Local • No Server Uploads • Private & Fast</p>
+                </div>
+            </div>
+            
+            <div class="flex flex-wrap items-center gap-3">
+               
+                     <!-- GT7 Decal Guide Link -->
+                <a href="guide2.html" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 text-xs bg-slate-800 hover:bg-slate-700 active:bg-slate-650 border border-slate-700 px-4 py-2 rounded-full transition-all duration-200 guide-link">
+                    <svg class="w-4 h-4 text-slate-300 guide-svg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332-0.477 4.5-1.253m0-13c1.168.776 2.754 1.253 4.5 1.253s3.332-0.477 4.5-1.253m0 0V21"></path>
+                    </svg>
+                    <span>How I create SVGs for GT7: A Guide</span>
+                </a>
+
+                <!-- Image Combiner Link -->
+                <a href="combine.html" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 text-xs bg-slate-800 hover:bg-slate-700 active:bg-slate-650 border border-slate-700 px-4 py-2 rounded-full transition-all duration-200 combiner-link">
+                    <svg class="w-4 h-4 text-slate-300 combiner-svg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <rect x="3" y="3" width="12" height="12" rx="2" ry="2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <rect x="9" y="9" width="12" height="12" rx="2" ry="2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span>Image Combiner</span>
+                </a>
+
+                <!-- Accessibility Contrast Switcher -->
+                <button id="contrastToggle" class="flex items-center gap-2 text-xs bg-slate-800 hover:bg-slate-700 active:bg-slate-650 border border-slate-700 px-4 py-2 rounded-full transition-all duration-200">
+                    <svg class="w-4 h-4 text-slate-300 contrast-svg" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8v16z"/>
+                    </svg>
+                    <span id="contrastToggleText">Contrast Mode</span>
+                </button>
+
+                <div class="flex items-center gap-2 text-xs bg-slate-850 px-3 py-1.5 rounded-full border border-slate-800 tracking-wide">
+                    <span class="inline-block w-2.5 h-2.5 bg-emerald-500 rounded-full animate-pulse"></span>
+                    <span class="text-slate-300 font-medium">Browser-Native processing</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow max-w-6xl w-full mx-auto px-4 py-8">
+        
+        <!-- Title Section -->
+        <div class="mb-8 border-b border-slate-800 pb-6">
+            <h1 class="text-3xl font-bold text-white mb-2 font-mono">image-split-combiner // v1.0</h1>
+            <p class="text-slate-400 text-sm">A precision browser tool to splice and stitch layout slices.</p>
+        </div>
+
+        <!-- Two-Column Workspace -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            <!-- Left Panel: Controls -->
+            <div class="lg:col-span-1 space-y-6">
+                
+                <!-- Left Image Upload -->
+                <div class="bg-slate-950/40 border border-dashed border-slate-800 hover:border-indigo-500 hover:bg-slate-900/30 transition-all rounded-xl p-6">
+                    <label for="leftInput" class="block text-xs font-semibold uppercase tracking-wider text-indigo-400 mb-3">SOURCE_LEFT</label>
+                    <input type="file" id="leftInput" accept="image/*" class="w-full text-xs text-slate-400 file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:bg-slate-800 file:text-slate-200 hover:file:bg-slate-700 mb-3">
+                    <img id="leftThumb" class="hidden w-full h-32 object-contain border border-slate-800 rounded-lg bg-slate-950 p-2" alt="Left Preview">
+                </div>
+
+                <!-- Right Image Upload -->
+                <div class="bg-slate-950/40 border border-dashed border-slate-800 hover:border-indigo-500 hover:bg-slate-900/30 transition-all rounded-xl p-6">
+                    <label for="rightInput" class="block text-xs font-semibold uppercase tracking-wider text-indigo-400 mb-3">SOURCE_RIGHT</label>
+                    <input type="file" id="rightInput" accept="image/*" class="w-full text-xs text-slate-400 file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:bg-slate-800 file:text-slate-200 hover:file:bg-slate-700 mb-3">
+                    <img id="rightThumb" class="hidden w-full h-32 object-contain border border-slate-800 rounded-lg bg-slate-950 p-2" alt="Right Preview">
+                </div>
+
+                <!-- Controls Panel -->
+                <div class="bg-slate-950/40 border border-slate-800 rounded-xl p-6">
+                    <label for="splitSlider" class="block text-xs font-semibold uppercase tracking-wider text-indigo-400 mb-4">SPLIT_POSITION: <span id="sliderValue" class="text-indigo-300">50</span>%</label>
+                    <input type="range" id="splitSlider" min="0" max="100" value="50" class="w-full mb-6 accent-indigo-500">
+                    
+                    <button id="combineBtn" class="w-full py-3 px-4 bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white rounded-lg font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                        </svg>
+                        EXECUTE_COMBINE
+                    </button>
+                </div>
+                
+            </div>
+
+            <!-- Right Panel: Canvas Output -->
+            <div class="lg:col-span-2 bg-slate-950/40 border border-slate-800 rounded-xl p-6">
+                <h3 class="text-xs font-semibold uppercase tracking-wider text-indigo-400 mb-4">output_render_canvas</h3>
+                <p id="placeholder" class="text-center text-slate-400 text-sm py-24">[ awaiting source image vectors... ]</p>
+                <canvas id="resultCanvas" class="hidden w-full border border-slate-800 rounded-lg bg-slate-950 shadow-xl"></canvas>
+                
+                <a id="downloadBtn" style="display: none;" class="hidden mt-6 w-full py-3 px-4 bg-slate-800 hover:bg-slate-700 text-indigo-400 hover:text-indigo-300 rounded-lg font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2 border border-slate-700">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                    </svg>
+                    EXPORT_PNG
+                </a>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-950 border-t border-slate-850 py-6 mt-12 text-center text-xs text-slate-500 transition-all duration-200">
+        <p>© 2026 Web SVG Path Splitter • Free & Open Source utility</p>
+    </footer>
+
+    <!-- Custom Styling for High Contrast Accessibility -->
     <style>
-        :root {
-            --bg-main: #0d1117;
-            --bg-panel: #161b22;
-            --bg-input: #21262d;
-            --border-color: #30363d;
-            --text-main: #c9d1d9;
-            --text-muted: #8b949e;
-            --accent-green: #2ea44f;
-            --accent-green-hover: #2c974b;
-            --accent-blue: #58a6ff;
-            --font-mono: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace;
+        /* --- ACCESSIBLE HIGH CONTRAST MODE STYLES --- */
+        body.high-contrast {
+            background-color: #000000 !important;
+            color: #ffffff !important;
+        }
+        body.high-contrast header {
+            background-color: #000000 !important;
+            border-bottom: 3px solid #ffffff !important;
+        }
+        body.high-contrast footer {
+            background-color: #000000 !important;
+            border-top: 3px solid #ffffff !important;
+        }
+        body.high-contrast .bg-slate-950\/40, 
+        body.high-contrast .bg-slate-900\/50,
+        body.high-contrast .bg-slate-900,
+        body.high-contrast .bg-slate-950\/20,
+        body.high-contrast .bg-indigo-950\/30,
+        body.high-contrast .bg-slate-950,
+        body.high-contrast .bg-slate-850 {
+            background-color: #000000 !important;
+            background-image: none !important;
+            border: 3px solid #ffffff !important;
+        }
+        body.high-contrast .border,
+        body.high-contrast .border-b,
+        body.high-contrast .border-2,
+        body.high-contrast .border-slate-800,
+        body.high-contrast .border-slate-850 {
+            border-color: #ffffff !important;
+            border-width: 2px !important;
+        }
+        body.high-contrast p,
+        body.high-contrast h1,
+        body.high-contrast h2,
+        body.high-contrast h3,
+        body.high-contrast h4,
+        body.high-contrast h5,
+        body.high-contrast h6,
+        body.high-contrast span,
+        body.high-contrast label,
+        body.high-contrast code,
+        body.high-contrast div {
+            color: #ffffff !important;
+        }
+        body.high-contrast .section-title,
+        body.high-contrast .rule-label,
+        body.high-contrast .stat-header,
+        body.high-contrast .text-indigo-400,
+        body.high-contrast .text-indigo-300\/60,
+        body.high-contrast .text-slate-400 {
+            color: #ffff00 !important; /* Highly visible accessible neon yellow */
+        }
+        body.high-contrast button {
+            background-color: #000000 !important;
+            color: #ffffff !important;
+            border: 3px solid #ffffff !important;
+            font-weight: 800 !important;
+        }
+        body.high-contrast button:hover {
+            background-color: #ffffff !important;
+            color: #000000 !important;
+            border-color: #ffffff !important;
+        }
+        body.high-contrast #combineBtn {
+            background-color: #000000 !important;
+            border-color: #ffff00 !important;
+            color: #ffff00 !important;
+        }
+        body.high-contrast #combineBtn:hover {
+            background-color: #ffff00 !important;
+            color: #000000 !important;
+        }
+        body.high-contrast svg.contrast-svg {
+            color: #ffff00 !important;
+        }
+        body.high-contrast svg path,
+        body.high-contrast svg line,
+        body.high-contrast svg polyline,
+        body.high-contrast svg rect,
+        body.high-contrast svg circle {
+            stroke: #ffffff !important;
+        }
+        /* High Contrast overrides for the Guide Link */
+        body.high-contrast .guide-link {
+            background-color: #000000 !important;
+            color: #ffff00 !important;
+            border: 3px solid #ffffff !important;
+        }
+        body.high-contrast .guide-link:hover {
+            background-color: #ffffff !important;
+            color: #000000 !important;
+            border-color: #ffffff !important;
+        }
+        body.high-contrast .guide-link:hover .guide-svg {
+            color: #000000 !important;
         }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-            background-color: var(--bg-main);
-            color: var(--text-main);
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 40px 20px;
+        /* High Contrast overrides for the Combiner Link */
+        body.high-contrast .combiner-link {
+            background-color: #000000 !important;
+            color: #ffff00 !important;
+            border: 3px solid #ffffff !important;
         }
-
-        header {
-            text-align: center;
-            margin-bottom: 40px;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 20px;
+        body.high-contrast .combiner-link:hover {
+            background-color: #ffffff !important;
+            color: #000000 !important;
+            border-color: #ffffff !important;
         }
-
-        h1 {
-            font-family: var(--font-mono);
-            font-size: 24px;
-            font-weight: 500;
-            color: #f0f6fc;
-            margin: 0 0 10px 0;
-            letter-spacing: -0.5px;
-        }
-
-        header p {
-            color: var(--text-muted);
-            margin: 0;
-            font-size: 14px;
-        }
-
-        .workspace {
-            display: flex;
-            gap: 24px;
-            flex-wrap: wrap;
-        }
-
-        .panel-left {
-            flex: 1;
-            min-width: 320px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .panel-right {
-            flex: 1.5;
-            min-width: 400px;
-            background: var(--bg-panel);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            padding: 24px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .panel-right h3 {
-            font-family: var(--font-mono);
-            font-size: 14px;
-            color: var(--text-muted);
-            margin-top: 0;
-            margin-bottom: 20px;
-            align-self: flex-start;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .upload-box {
-            background: var(--bg-panel);
-            border: 1px dashed var(--border-color);
-            border-radius: 6px;
-            padding: 20px;
-            transition: border-color 0.2s;
-        }
-
-        .upload-box:hover {
-            border-color: var(--text-muted);
-        }
-
-        .upload-box label {
-            display: block;
-            font-family: var(--font-mono);
-            font-size: 13px;
-            font-weight: 600;
-            margin-bottom: 12px;
-            color: var(--text-main);
-        }
-
-        /* Custom style for file inputs to match tool look */
-        .upload-box input[type="file"] {
-            width: 100%;
-            font-family: var(--font-mono);
-            font-size: 12px;
-            color: var(--text-muted);
-            background: var(--bg-input);
-            border: 1px solid var(--border-color);
-            padding: 8px;
-            border-radius: 6px;
-            box-sizing: border-box;
-            margin-bottom: 12px;
-        }
-
-        .thumbnail-preview {
-            width: 100%;
-            height: 140px;
-            object-fit: contain;
-            border-radius: 4px;
-            border: 1px solid var(--border-color);
-            background-color: var(--bg-main);
-            display: none;
-        }
-
-        .controls {
-            background: var(--bg-panel);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            padding: 20px;
-        }
-
-        .controls label {
-            font-family: var(--font-mono);
-            font-size: 13px;
-            display: block;
-            margin-bottom: 12px;
-        }
-
-        #sliderValue {
-            color: var(--accent-blue);
-            font-weight: bold;
-        }
-
-        /* Modern dark-themed range slider styling */
-        input[type="range"] {
-            -webkit-appearance: none;
-            width: 100%;
-            background: var(--bg-input);
-            height: 6px;
-            border-radius: 3px;
-            border: 1px solid var(--border-color);
-            margin-bottom: 20px;
-            outline: none;
-        }
-
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            background: var(--accent-blue);
-            cursor: pointer;
-        }
-
-        /* Action Buttons styling */
-        .btn {
-            width: 100%;
-            padding: 10px 16px;
-            font-family: var(--font-mono);
-            font-size: 14px;
-            font-weight: 500;
-            border: 1px solid rgba(27, 31, 36, 0.15);
-            border-radius: 6px;
-            cursor: pointer;
-            box-sizing: border-box;
-            transition: background-color 0.2s;
-        }
-
-        .combine-btn {
-            background-color: var(--accent-green);
-            color: #ffffff;
-        }
-
-        .combine-btn:hover {
-            background-color: var(--accent-green-hover);
-        }
-
-        .download-btn {
-            background-color: transparent;
-            color: var(--accent-blue);
-            border: 1px solid var(--border-color);
-            margin-top: 20px;
-            display: inline-block;
-            text-decoration: none;
-            padding: 10px 20px;
-            width: auto;
-            text-align: center;
-        }
-
-        .download-btn:hover {
-            background-color: var(--bg-input);
-            border-color: var(--text-muted);
-        }
-
-        /* Output Canvas Area */
-        canvas {
-            max-width: 100%;
-            height: auto;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            background: var(--bg-main);
-            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
-            margin-top: 10px;
-        }
-
-        .placeholder-text {
-            color: var(--text-muted);
-            font-family: var(--font-mono);
-            font-size: 13px;
-            text-align: center;
-            margin: auto 0;
-            padding: 100px 0;
+        body.high-contrast .combiner-link:hover .combiner-svg {
+            color: #000000 !important;
         }
     </style>
-</head>
-<body>
 
-    <header>
-        <h1>image-split-combiner // v1.0</h1>
-        <p>A precision browser tool to splice and stitch layout slices.</p>
-    </header>
-    
-    <div class="workspace">
-        
-        <div class="panel-left">
-            
-            <div class="upload-box">
-                <label for="leftInput">SOURCE_LEFT</label>
-                <input type="file" id="leftInput" accept="image/*">
-                <img id="leftThumb" class="thumbnail-preview" alt="Left Preview">
-            </div>
-
-            <div class="upload-box">
-                <label for="rightInput">SOURCE_RIGHT</label>
-                <input type="file" id="rightInput" accept="image/*">
-                <img id="rightThumb" class="thumbnail-preview" alt="Right Preview">
-            </div>
-
-            <div class="controls">
-                <label for="splitSlider">SPLIT_POSITION: <span id="sliderValue">50</span>%</label>
-                <input type="range" id="splitSlider" min="0" max="100" value="50">
-                
-                <button id="combineBtn" class="btn combine-btn">EXECUTE_COMBINE</button>
-            </div>
-            
-        </div>
-
-        <div class="panel-right">
-            <h3>output_render_canvas</h3>
-            <p id="placeholder" class="placeholder-text">[ awaiting source image vectors... ]</p>
-            <canvas id="resultCanvas" style="display: none;"></canvas>
-            
-            <a id="downloadBtn" style="display: none;" class="btn download-btn">
-                EXPORT_PNG
-            </a>
-        </div>
-
-    </div>
-
+    <!-- Combine Logic & Contrast Mode Toggle -->
     <script>
         const leftInput = document.getElementById('leftInput');
         const rightInput = document.getElementById('rightInput');
@@ -288,9 +254,25 @@
         const canvas = document.getElementById('resultCanvas');
         const placeholder = document.getElementById('placeholder');
         const downloadBtn = document.getElementById('downloadBtn');
+        const contrastToggle = document.getElementById('contrastToggle');
+        const contrastToggleText = document.getElementById('contrastToggleText');
 
         let imgLeft = null;
         let imgRight = null;
+
+        // Contrast Mode toggle logic
+        contrastToggle.addEventListener('click', () => {
+            const isHighContrast = document.body.classList.toggle('high-contrast');
+            contrastToggleText.textContent = isHighContrast ? "Default Contrast" : "Contrast Mode";
+            
+            if (isHighContrast) {
+                contrastToggle.classList.add('bg-white', 'text-black', 'border-white');
+                contrastToggle.classList.remove('bg-slate-800', 'text-slate-200', 'border-slate-700');
+            } else {
+                contrastToggle.classList.remove('bg-white', 'text-black', 'border-white');
+                contrastToggle.classList.add('bg-slate-800', 'text-slate-200', 'border-slate-700');
+            }
+        });
 
         leftInput.addEventListener('change', (e) => {
             const file = e.target.files[0];
@@ -299,7 +281,7 @@
                 imgLeft.src = URL.createObjectURL(file);
                 imgLeft.onload = () => {
                     leftThumb.src = imgLeft.src;
-                    leftThumb.style.display = 'block';
+                    leftThumb.classList.remove('hidden');
                 };
             }
         });
@@ -311,7 +293,7 @@
                 imgRight.src = URL.createObjectURL(file);
                 imgRight.onload = () => {
                     rightThumb.src = imgRight.src;
-                    rightThumb.style.display = 'block';
+                    rightThumb.classList.remove('hidden');
                 };
             }
         });
@@ -344,13 +326,14 @@
             ctx.drawImage(imgLeft, 0, 0, leftSourceSplitX, imgLeft.height, 0, 0, canvasSplitX, targetHeight);
             ctx.drawImage(imgRight, rightSourceSplitX, 0, imgRight.width - rightSourceSplitX, imgRight.height, canvasSplitX, 0, targetWidth - canvasSplitX, targetHeight);
 
-            placeholder.style.display = 'none';
-            canvas.style.display = 'inline-block';
+            placeholder.classList.add('hidden');
+            canvas.classList.remove('hidden');
             
             downloadBtn.href = canvas.toDataURL('image/png');
             downloadBtn.download = 'split-combined-image.png';
-            downloadBtn.style.display = 'inline-block';
+            downloadBtn.classList.remove('hidden');
         }
     </script>
+
 </body>
 </html>
