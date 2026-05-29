@@ -56,9 +56,9 @@ A few days ago someone on Reddit asked about splitting SVG files to make them sm
 
 <h2>What makes up an SVG file?</h2>
 
-<div class="centered-content">
-    <pre><code>
-&lt;svg width="400" height="400" xmlns="http://www.w3.org/2000/svg"&gt;
+<div class="split-container">
+    <div class="split-side code-side">
+        <pre><code>&lt;svg width="400" height="400" xmlns="http://www.w3.org/2000/svg"&gt;
   &lt;!-- Red Square --&gt;
   &lt;path d="M 40 40 L 140 40 L 140 140 L 40 140 Z" fill="red" /&gt;
   &lt;!-- Green Pentagon --&gt;
@@ -67,8 +67,12 @@ A few days ago someone on Reddit asked about splitting SVG files to make them sm
   &lt;path d="M 100 250 A 50 50 0 1 0 99.9 250 Z" fill="blue" /&gt;
   &lt;!-- Yellow Star --&gt;
   &lt;path d="M 250 210 L 264 245 L 302 245 L 272 268 L 284 305 L 250 282 L 216 305 L 228 268 L 198 245 L 236 245 Z" fill="yellow" /&gt;
-&lt;/svg&gt;
-    </code></pre>
+&lt;/svg&gt;</code></pre>
+    </div>
+    
+    <div class="split-side image-side">
+        <img src="4shapes.svg" alt="Rendered SVG containing a square, pentagon, circle, and star">
+    </div>
 </div>
 
 <p>The spaces and new lines aren't important; they're just there to prettify the code. Each shape has one color. We'll use that feature to split our path layers later.</p>
