@@ -1,0 +1,32 @@
+<svg width="400" height="400" xmlns="http://www.w3.org/2000/svg">
+
+  <!-- Red Square -->
+  <path d="M 40 40 L 140 40 L 140 140 L 40 140 Z"
+        fill="red" />
+
+  <!-- Green Pentagon -->
+  <path d="M 250 40 L 310 85 L 285 155 L 215 155 L 190 85 Z"
+        fill="green" />
+
+  <!-- Blue Circle -->
+  <path d="
+    M 100 250
+    A 50 50 0 1 0 99.9 250
+    Z"
+    fill="blue" />
+
+  <!-- Yellow Star -->
+  <path d="M 250 210
+           L 264 245
+           L 302 245
+           L 272 268
+           L 284 305
+           L 250 282
+           L 216 305
+           L 228 268
+           L 198 245
+           L 236 245
+           Z"
+        fill="yellow" />
+
+</svg>
