@@ -10,33 +10,32 @@
 <body class="bg-slate-900 text-slate-100 min-h-screen font-sans flex flex-col antialiased transition-colors duration-200">
 
     <!-- Header -->
-    <header class="border-b border-slate-800 bg-slate-950/50 backdrop-blur-sm sticky top-0 z-50 transition-colors duration-200">
+    <header class="border-b border-slate-800 bg-slate-950/50 backdrop-blur-sm sticky top-0 z-50 transition-colors duration-200" role="banner">
         <div class="max-w-6xl mx-auto px-4 py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div class="flex items-center gap-3">
                 <div class="bg-indigo-600 text-white p-2 rounded-lg shadow-lg shadow-indigo-500/30">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.121 14.121L19 19m-7-7h7m-7-7h7M3 10a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H4a1 1 0 01-1-1v-4z[...]
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.121 14.121L19 19m-7-7h7m-7-7h7M3 10a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H4a1 1 0 01-1-1v-4z"/>
                     </svg>
                 </div>
                 <div>
-                    <h1 class="text-xl font-bold tracking-tight text-white animate-contrast">SVG Path Splitter</h1>
+                    <h1 class="text-xl font-bold tracking-tight text-white">SVG Path Splitter</h1>
                     <p class="text-xs text-slate-400">100% Local • No Server Uploads • Private & Fast</p>
                 </div>
             </div>
             
             <div class="flex flex-wrap items-center gap-3">
-               
-                     <!-- GT7 Decal Guide Link -->
-                <a href="guide2.html" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 text-xs bg-slate-800 hover:bg-slate-700 active:bg-slate-650 border border-slate-700 p[...]
-                    <svg class="w-4 h-4 text-slate-300 guide-svg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.[...]
+                <!-- GT7 Decal Guide Link -->
+                <a href="guide2.html" target="_blank" rel="noopener noreferrer" class="guide-link flex items-center gap-2 text-xs bg-slate-800 hover:bg-slate-700 active:bg-slate-650 border border-slate-700 px-4 py-2 rounded-full transition-all" aria-label="Open GT7 SVG creation guide in new window">
+                    <svg class="w-4 h-4 text-slate-300 guide-svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
                     </svg>
                     <span>How I create SVGs for GT7: A Guide</span>
                 </a>
 
                 <!-- Image Combiner Link -->
-                <a href="combine.html" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 text-xs bg-slate-800 hover:bg-slate-700 active:bg-slate-650 border border-slate-700 [...]
-                    <svg class="w-4 h-4 text-slate-300 combiner-svg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <a href="combine.html" target="_blank" rel="noopener noreferrer" class="combiner-link flex items-center gap-2 text-xs bg-slate-800 hover:bg-slate-700 active:bg-slate-650 border border-slate-700 px-4 py-2 rounded-full transition-all" aria-label="Image Combiner tool (opens in new window)">
+                    <svg class="w-4 h-4 text-slate-300 combiner-svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                         <rect x="3" y="3" width="12" height="12" rx="2" ry="2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         <rect x="9" y="9" width="12" height="12" rx="2" ry="2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
@@ -44,15 +43,15 @@
                 </a>
 
                 <!-- Accessibility Contrast Switcher -->
-                <button id="contrastToggle" class="flex items-center gap-2 text-xs bg-slate-800 hover:bg-slate-700 active:bg-slate-650 border border-slate-700 px-4 py-2 rounded-full transition-all[...]
-                    <svg class="w-4 h-4 text-slate-300 contrast-svg" fill="currentColor" viewBox="0 0 24 24">
+                <button id="contrastToggle" type="button" class="flex items-center gap-2 text-xs bg-slate-800 hover:bg-slate-700 active:bg-slate-650 border border-slate-700 px-4 py-2 rounded-full transition-all" aria-pressed="false" aria-label="Toggle high contrast accessibility mode">
+                    <svg class="w-4 h-4 text-slate-300 contrast-svg" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8v16z"/>
                     </svg>
                     <span id="contrastToggleText">Contrast Mode</span>
                 </button>
 
                 <div class="flex items-center gap-2 text-xs bg-slate-850 px-3 py-1.5 rounded-full border border-slate-800 tracking-wide">
-                    <span class="inline-block w-2.5 h-2.5 bg-emerald-500 rounded-full animate-pulse"></span>
+                    <span class="inline-block w-2.5 h-2.5 bg-emerald-500 rounded-full animate-pulse" aria-hidden="true"></span>
                     <span class="text-slate-300 font-medium">Browser-Native processing</span>
                 </div>
             </div>
@@ -64,7 +63,7 @@
         
         <!-- Title Section -->
         <div class="mb-8 border-b border-slate-800 pb-6">
-            <h1 class="text-3xl font-bold text-white mb-2 font-mono">image-split-combiner // v1.0</h1>
+            <h1 class="text-3xl font-bold text-white mb-2 font-mono">image-split-combiner // v1.1</h1>
             <p class="text-slate-400 text-sm">A precision browser tool to splice and stitch layout slices.</p>
         </div>
 
@@ -77,27 +76,34 @@
                 <!-- Left Image Upload -->
                 <div class="bg-slate-950/40 border border-dashed border-slate-800 hover:border-indigo-500 hover:bg-slate-900/30 transition-all rounded-xl p-6">
                     <label for="leftInput" class="block text-xs font-semibold uppercase tracking-wider text-indigo-400 mb-3">SOURCE_LEFT</label>
-                    <input type="file" id="leftInput" accept="image/*" class="w-full text-xs text-slate-400 file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:bg-slate-800 file:text-[...]
-                    <img id="leftThumb" class="hidden w-full h-32 object-contain border border-slate-800 rounded-lg bg-slate-950 p-2" alt="Left Preview">
+                    <input type="file" id="leftInput" accept="image/*" class="w-full text-xs text-slate-400 file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:bg-slate-800 file:text-slate-100 file:cursor-pointer file:hover:bg-slate-700 file:transition-colors" aria-label="Upload left source image">
+                    <img id="leftThumb" class="hidden w-full h-32 object-contain border border-slate-800 rounded-lg bg-slate-950 p-2 mt-3" alt="Left image preview">
+                    <div id="leftDimensions" class="hidden text-xs text-slate-400 mt-2"></div>
                 </div>
 
                 <!-- Right Image Upload -->
                 <div class="bg-slate-950/40 border border-dashed border-slate-800 hover:border-indigo-500 hover:bg-slate-900/30 transition-all rounded-xl p-6">
                     <label for="rightInput" class="block text-xs font-semibold uppercase tracking-wider text-indigo-400 mb-3">SOURCE_RIGHT</label>
-                    <input type="file" id="rightInput" accept="image/*" class="w-full text-xs text-slate-400 file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:bg-slate-800 file:text[...]
-                    <img id="rightThumb" class="hidden w-full h-32 object-contain border border-slate-800 rounded-lg bg-slate-950 p-2" alt="Right Preview">
+                    <input type="file" id="rightInput" accept="image/*" class="w-full text-xs text-slate-400 file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:bg-slate-800 file:text-slate-100 file:cursor-pointer file:hover:bg-slate-700 file:transition-colors" aria-label="Upload right source image">
+                    <img id="rightThumb" class="hidden w-full h-32 object-contain border border-slate-800 rounded-lg bg-slate-950 p-2 mt-3" alt="Right image preview">
+                    <div id="rightDimensions" class="hidden text-xs text-slate-400 mt-2"></div>
                 </div>
 
                 <!-- Controls Panel -->
                 <div class="bg-slate-950/40 border border-slate-800 rounded-xl p-6">
-                    <label for="splitSlider" class="block text-xs font-semibold uppercase tracking-wider text-indigo-400 mb-4">SPLIT_POSITION: <span id="sliderValue" class="text-indigo-300">50</sp[...]
-                    <input type="range" id="splitSlider" min="0" max="100" value="50" class="w-full mb-6 accent-indigo-500">
+                    <label for="splitSlider" class="block text-xs font-semibold uppercase tracking-wider text-indigo-400 mb-4">SPLIT_POSITION: <span id="sliderValue" class="text-indigo-300">50</span>%</label>
+                    <input type="range" id="splitSlider" min="0" max="100" value="50" class="w-full mb-2 accent-indigo-500" aria-label="Split position slider">
+                    <div class="text-xs text-slate-500 mb-6">Left: <span id="leftPercentDisplay">50</span>% | Right: <span id="rightPercentDisplay">50</span>%</div>
                     
-                    <button id="combineBtn" class="w-full py-3 px-4 bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white rounded-lg font-semibold text-sm transition-all duration-200 f[...]
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <button id="combineBtn" type="button" class="w-full py-3 px-4 bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white rounded-lg font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed" aria-label="Combine images">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
                         </svg>
-                        EXECUTE_COMBINE
+                        <span id="combineBtnText">EXECUTE_COMBINE</span>
+                    </button>
+
+                    <button id="resetBtn" type="button" class="w-full mt-3 py-2 px-4 bg-slate-800 hover:bg-slate-700 active:bg-slate-600 text-slate-200 rounded-lg font-semibold text-sm transition-all duration-200" aria-label="Reset all inputs and clear canvas">
+                        RESET_ALL
                     </button>
                 </div>
                 
@@ -107,15 +113,32 @@
             <div class="lg:col-span-2 bg-slate-950/40 border border-slate-800 rounded-xl p-6">
                 <h3 class="text-xs font-semibold uppercase tracking-wider text-indigo-400 mb-4">output_render_canvas</h3>
                 <p id="placeholder" class="text-center text-slate-400 text-sm py-24">[ awaiting source image vectors... ]</p>
-                <canvas id="resultCanvas" class="hidden w-full border border-slate-800 rounded-lg bg-slate-950 shadow-xl"></canvas>
+                <div id="canvasContainer" class="hidden">
+                    <canvas id="resultCanvas" class="w-full border border-slate-800 rounded-lg bg-slate-950 shadow-xl"></canvas>
+                    <div class="mt-3 space-y-1 text-xs text-slate-400">
+                        <div>Canvas Dimensions: <span id="canvasDimensions" class="text-slate-300">-</span></div>
+                        <div>Estimated File Size: <span id="fileSizeEstimate" class="text-slate-300">-</span></div>
+                    </div>
+                </div>
                 
                 <div id="downloadContainer" class="hidden mt-6 space-y-3">
-                    <a id="downloadBtn" class="flex items-center justify-center gap-2 w-full py-3 px-4 bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-white rounded-lg font-semibold text-sm transition-all duration-200 shadow-lg shadow-emerald-500/30">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <a id="downloadBtn" class="flex items-center justify-center gap-2 w-full py-3 px-4 bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-white rounded-lg font-semibold text-sm transition-all duration-200 cursor-pointer" role="button" tabindex="0" aria-label="Download combined image as PNG">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
                         </svg>
                         DOWNLOAD PNG
                     </a>
+                    <button id="copyCanvasBtn" type="button" class="flex items-center justify-center gap-2 w-full py-3 px-4 bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white rounded-lg font-semibold text-sm transition-all duration-200" aria-label="Copy canvas to clipboard">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                        </svg>
+                        COPY TO CLIPBOARD
+                    </button>
+                </div>
+
+                <!-- Error Message -->
+                <div id="errorContainer" class="hidden mt-6 p-4 bg-red-900/30 border border-red-700 rounded-lg">
+                    <p class="text-xs text-red-300" id="errorMessage"></p>
                 </div>
             </div>
 
@@ -124,7 +147,7 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-slate-950 border-t border-slate-850 py-6 mt-12 text-center text-xs text-slate-500 transition-all duration-200">
+    <footer class="bg-slate-950 border-t border-slate-850 py-6 mt-12 text-center text-xs text-slate-500 transition-all duration-200" role="contentinfo">
         <p>© 2026 Web SVG Path Splitter • Free & Open Source utility</p>
     </footer>
 
@@ -181,7 +204,7 @@
         body.high-contrast .text-indigo-400,
         body.high-contrast .text-indigo-300\/60,
         body.high-contrast .text-slate-400 {
-            color: #ffff00 !important; /* Highly visible accessible neon yellow */
+            color: #ffff00 !important;
         }
         body.high-contrast button {
             background-color: #000000 !important;
@@ -222,7 +245,6 @@
         body.high-contrast svg circle {
             stroke: #ffffff !important;
         }
-        /* High Contrast overrides for the Guide Link */
         body.high-contrast .guide-link {
             background-color: #000000 !important;
             color: #ffff00 !important;
@@ -236,8 +258,6 @@
         body.high-contrast .guide-link:hover .guide-svg {
             color: #000000 !important;
         }
-
-        /* High Contrast overrides for the Combiner Link */
         body.high-contrast .combiner-link {
             background-color: #000000 !important;
             color: #ffff00 !important;
@@ -251,30 +271,109 @@
         body.high-contrast .combiner-link:hover .combiner-svg {
             color: #000000 !important;
         }
+        body.high-contrast #errorContainer {
+            background-color: #330000 !important;
+            border-color: #ff0000 !important;
+        }
+        body.high-contrast #errorContainer p {
+            color: #ff6666 !important;
+        }
+
+        /* Smooth focus outlines for keyboard navigation */
+        button:focus-visible, a:focus-visible, input:focus-visible {
+            outline: 2px solid #6366f1;
+            outline-offset: 2px;
+        }
+        body.high-contrast button:focus-visible, 
+        body.high-contrast a:focus-visible, 
+        body.high-contrast input:focus-visible {
+            outline: 3px solid #ffff00;
+            outline-offset: 2px;
+        }
     </style>
 
-    <!-- Combine Logic & Contrast Mode Toggle -->
+    <!-- Combine Logic, Contrast Mode Toggle & Enhancements -->
     <script>
+        /* ===== DOM Elements ===== */
         const leftInput = document.getElementById('leftInput');
         const rightInput = document.getElementById('rightInput');
         const leftThumb = document.getElementById('leftThumb');
         const rightThumb = document.getElementById('rightThumb');
+        const leftDimensions = document.getElementById('leftDimensions');
+        const rightDimensions = document.getElementById('rightDimensions');
         const splitSlider = document.getElementById('splitSlider');
         const sliderValue = document.getElementById('sliderValue');
+        const leftPercentDisplay = document.getElementById('leftPercentDisplay');
+        const rightPercentDisplay = document.getElementById('rightPercentDisplay');
         const combineBtn = document.getElementById('combineBtn');
+        const resetBtn = document.getElementById('resetBtn');
         const canvas = document.getElementById('resultCanvas');
+        const canvasContainer = document.getElementById('canvasContainer');
         const placeholder = document.getElementById('placeholder');
         const downloadBtn = document.getElementById('downloadBtn');
+        const copyCanvasBtn = document.getElementById('copyCanvasBtn');
         const downloadContainer = document.getElementById('downloadContainer');
         const contrastToggle = document.getElementById('contrastToggle');
         const contrastToggleText = document.getElementById('contrastToggleText');
+        const canvasDimensions = document.getElementById('canvasDimensions');
+        const fileSizeEstimate = document.getElementById('fileSizeEstimate');
+        const errorContainer = document.getElementById('errorContainer');
+        const errorMessage = document.getElementById('errorMessage');
+        const combineBtnText = document.getElementById('combineBtnText');
 
+        /* ===== State ===== */
         let imgLeft = null;
         let imgRight = null;
+        let lastMergeResult = null;
 
-        // Contrast Mode toggle logic
+        /* Configuration */
+        const MAX_FILE_SIZE = 50 * 1024 * 1024;
+        const SUPPORTED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+
+        /* ===== Utility Functions ===== */
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorContainer.classList.remove('hidden');
+            setTimeout(() => {
+                if (errorContainer.parentElement) {
+                    errorContainer.classList.add('hidden');
+                }
+            }, 5000);
+        }
+
+        function clearError() {
+            errorContainer.classList.add('hidden');
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+        }
+
+        function validateImageFile(file) {
+            if (!SUPPORTED_TYPES.includes(file.type)) {
+                throw new Error(`Unsupported file type: ${file.type}. Supported: JPEG, PNG, WebP, GIF`);
+            }
+            if (file.size > MAX_FILE_SIZE) {
+                throw new Error(`File too large: ${formatFileSize(file.size)}. Max: ${formatFileSize(MAX_FILE_SIZE)}`);
+            }
+            return true;
+        }
+
+        function updateSliderDisplay() {
+            const percent = splitSlider.value;
+            sliderValue.textContent = percent;
+            leftPercentDisplay.textContent = percent;
+            rightPercentDisplay.textContent = 100 - percent;
+        }
+
+        /* ===== Contrast Mode Toggle ===== */
         contrastToggle.addEventListener('click', () => {
             const isHighContrast = document.body.classList.toggle('high-contrast');
+            contrastToggle.setAttribute('aria-pressed', isHighContrast);
             contrastToggleText.textContent = isHighContrast ? "Default Contrast" : "Contrast Mode";
             
             if (isHighContrast) {
@@ -284,67 +383,232 @@
                 contrastToggle.classList.remove('bg-white', 'text-black', 'border-white');
                 contrastToggle.classList.add('bg-slate-800', 'text-slate-200', 'border-slate-700');
             }
+            localStorage.setItem('highContrastMode', isHighContrast);
         });
 
+        /* Load contrast mode preference */
+        if (localStorage.getItem('highContrastMode') === 'true') {
+            contrastToggle.click();
+        }
+
+        /* ===== Image Upload Handlers ===== */
         leftInput.addEventListener('change', (e) => {
             const file = e.target.files[0];
-            if (file) {
+            if (!file) return;
+
+            try {
+                validateImageFile(file);
+                clearError();
                 imgLeft = new Image();
                 imgLeft.src = URL.createObjectURL(file);
+                imgLeft.onerror = () => {
+                    showError('Failed to load left image. Please try a different file.');
+                    imgLeft = null;
+                };
                 imgLeft.onload = () => {
                     leftThumb.src = imgLeft.src;
                     leftThumb.classList.remove('hidden');
+                    leftDimensions.textContent = `${imgLeft.width}×${imgLeft.height}px`;
+                    leftDimensions.classList.remove('hidden');
+                    updateCombineButtonState();
                 };
+            } catch (error) {
+                showError(`Left image error: ${error.message}`);
+                imgLeft = null;
+                leftInput.value = '';
             }
         });
 
         rightInput.addEventListener('change', (e) => {
             const file = e.target.files[0];
-            if (file) {
+            if (!file) return;
+
+            try {
+                validateImageFile(file);
+                clearError();
                 imgRight = new Image();
                 imgRight.src = URL.createObjectURL(file);
+                imgRight.onerror = () => {
+                    showError('Failed to load right image. Please try a different file.');
+                    imgRight = null;
+                };
                 imgRight.onload = () => {
                     rightThumb.src = imgRight.src;
                     rightThumb.classList.remove('hidden');
+                    rightDimensions.textContent = `${imgRight.width}×${imgRight.height}px`;
+                    rightDimensions.classList.remove('hidden');
+                    updateCombineButtonState();
                 };
+            } catch (error) {
+                showError(`Right image error: ${error.message}`);
+                imgRight = null;
+                rightInput.value = '';
             }
         });
 
-        splitSlider.addEventListener('input', (e) => {
-            sliderValue.textContent = e.target.value;
-        });
-
-        combineBtn.addEventListener('click', () => {
-            if (!imgLeft || !imgRight) {
-                alert("Error: Both source files must be assigned before executing.");
-                return;
+        function updateCombineButtonState() {
+            const isReady = imgLeft && imgRight;
+            combineBtn.disabled = !isReady;
+            if (isReady) {
+                combineBtnText.textContent = 'EXECUTE_COMBINE';
             }
-            mergeImages();
-        });
-
-        function mergeImages() {
-            const ctx = canvas.getContext('2d');
-            const targetWidth = Math.max(imgLeft.width, imgRight.width);
-            const targetHeight = Math.max(imgLeft.height, imgRight.height);
-            
-            canvas.width = targetWidth;
-            canvas.height = targetHeight;
-
-            const splitPercent = splitSlider.value / 100;
-            const canvasSplitX = targetWidth * splitPercent;
-            const leftSourceSplitX = imgLeft.width * splitPercent;
-            const rightSourceSplitX = imgRight.width * splitPercent;
-
-            ctx.drawImage(imgLeft, 0, 0, leftSourceSplitX, imgLeft.height, 0, 0, canvasSplitX, targetHeight);
-            ctx.drawImage(imgRight, rightSourceSplitX, 0, imgRight.width - rightSourceSplitX, imgRight.height, canvasSplitX, 0, targetWidth - canvasSplitX, targetHeight);
-
-            placeholder.classList.add('hidden');
-            canvas.classList.remove('hidden');
-            
-            downloadBtn.href = canvas.toDataURL('image/png');
-            downloadBtn.download = 'split-combined-image.png';
-            downloadContainer.classList.remove('hidden');
         }
+
+        /* ===== Slider Updates ===== */
+        splitSlider.addEventListener('input', (e) => {
+            updateSliderDisplay();
+            if (lastMergeResult) {
+                debouncePreview();
+            }
+        });
+
+        let previewTimeout;
+        function debouncePreview() {
+            clearTimeout(previewTimeout);
+            previewTimeout = setTimeout(() => {
+                mergeImages();
+            }, 150);
+        }
+
+        /* ===== Combine & Reset Handlers ===== */
+        combineBtn.addEventListener('click', () => {
+            clearError();
+            try {
+                mergeImages();
+                combineBtnText.textContent = '✓ COMBINED';
+                setTimeout(() => {
+                    combineBtnText.textContent = 'EXECUTE_COMBINE';
+                }, 2000);
+            } catch (error) {
+                showError(`Combine error: ${error.message}`);
+            }
+        });
+
+        resetBtn.addEventListener('click', () => {
+            leftInput.value = '';
+            rightInput.value = '';
+            imgLeft = null;
+            imgRight = null;
+            lastMergeResult = null;
+
+            leftThumb.classList.add('hidden');
+            rightThumb.classList.add('hidden');
+            leftDimensions.classList.add('hidden');
+            rightDimensions.classList.add('hidden');
+            placeholder.classList.remove('hidden');
+            canvasContainer.classList.add('hidden');
+            downloadContainer.classList.add('hidden');
+            clearError();
+            splitSlider.value = 50;
+            updateSliderDisplay();
+            updateCombineButtonState();
+        });
+
+        /* ===== Canvas Download & Copy ===== */
+        downloadBtn.addEventListener('click', (e) => {
+            if (downloadBtn.href) {
+                e.preventDefault();
+                const link = document.createElement('a');
+                link.href = downloadBtn.href;
+                link.download = downloadBtn.download;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+        });
+
+        downloadBtn.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                downloadBtn.click();
+            }
+        });
+
+        copyCanvasBtn.addEventListener('click', async () => {
+            try {
+                canvas.toBlob(async (blob) => {
+                    try {
+                        await navigator.clipboard.write([
+                            new ClipboardItem({ 'image/png': blob })
+                        ]);
+                        const originalText = copyCanvasBtn.textContent;
+                        copyCanvasBtn.textContent = '✓ COPIED';
+                        setTimeout(() => {
+                            copyCanvasBtn.textContent = originalText;
+                        }, 2000);
+                    } catch (error) {
+                        showError('Failed to copy to clipboard. Browser may not support this feature.');
+                    }
+                });
+            } catch (error) {
+                showError(`Copy error: ${error.message}`);
+            }
+        });
+
+        /* ===== Main Merge Function ===== */
+        function mergeImages() {
+            if (!imgLeft || !imgRight) {
+                throw new Error('Both source images must be loaded before executing.');
+            }
+
+            const ctx = canvas.getContext('2d', { alpha: true });
+            if (!ctx) {
+                throw new Error('Canvas context unavailable');
+            }
+
+            try {
+                const dpr = window.devicePixelRatio || 1;
+                const targetWidth = Math.max(imgLeft.width, imgRight.width);
+                const targetHeight = Math.max(imgLeft.height, imgRight.height);
+                
+                canvas.width = targetWidth * dpr;
+                canvas.height = targetHeight * dpr;
+                canvas.style.width = targetWidth + 'px';
+                canvas.style.height = targetHeight + 'px';
+                
+                ctx.scale(dpr, dpr);
+                ctx.imageSmoothingEnabled = true;
+                ctx.imageSmoothingQuality = 'high';
+
+                const splitPercent = splitSlider.value / 100;
+                const canvasSplitX = targetWidth * splitPercent;
+                const leftSourceSplitX = imgLeft.width * splitPercent;
+                const rightSourceSplitX = imgRight.width * splitPercent;
+
+                ctx.drawImage(
+                    imgLeft,
+                    0, 0, leftSourceSplitX, imgLeft.height,
+                    0, 0, canvasSplitX, targetHeight
+                );
+
+                ctx.drawImage(
+                    imgRight,
+                    rightSourceSplitX, 0, imgRight.width - rightSourceSplitX, imgRight.height,
+                    canvasSplitX, 0, targetWidth - canvasSplitX, targetHeight
+                );
+
+                placeholder.classList.add('hidden');
+                canvasContainer.classList.remove('hidden');
+                downloadContainer.classList.remove('hidden');
+
+                canvasDimensions.textContent = `${targetWidth}×${targetHeight}px (${(targetWidth * targetHeight).toLocaleString()} pixels)`;
+                
+                const estimatedBytes = targetWidth * targetHeight * 4 * 0.5;
+                fileSizeEstimate.textContent = formatFileSize(estimatedBytes);
+
+                downloadBtn.href = canvas.toDataURL('image/png');
+                downloadBtn.download = 'split-combined-image.png';
+                
+                lastMergeResult = true;
+                clearError();
+
+            } catch (error) {
+                throw new Error(`Render failed: ${error.message}`);
+            }
+        }
+
+        updateCombineButtonState();
+        updateSliderDisplay();
     </script>
 
 </body>
