@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SVG Compression</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen font-sans flex flex-col antialiased transition-colors duration-200">
+
+    <!-- Header -->
+    <header class="border-b border-slate-800 bg-slate-950/50 backdrop-blur-sm sticky top-0 z-50 transition-colors duration-200">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <div class="bg-indigo-600 text-white p-2 rounded-lg shadow-lg shadow-indigo-500/30">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.121 14.121L19 19m-7-7h7m-7-7h7M3 10a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H4a1 1 0 01-1-1v-4z"></[...]
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold tracking-tight text-white animate-contrast">SVG Path Splitter</h1>
+                    <p class="text-xs text-slate-400">100% Local • No Server Uploads • Private & Fast</p>
+                </div>
+            </div>
+            
+            <div class="flex flex-wrap items-center gap-3">
+               
+                     <!-- GT7 Decal Guide Link -->
+                <a href="guide.html" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 text-xs bg-slate-800 hover:bg-slate-700 active:bg-slate-650 border border-slate-700 px-4 [...]
+                    <svg class="w-4 h-4 text-slate-300 guide-svg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332-[...]
+                    </svg>
+                    <span>How I create SVGs for GT7: A Guide</span>
+                </a>
+
+                <!-- Image Combiner Link -->
+                <a href="combine.html" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 text-xs bg-slate-800 hover:bg-slate-700 active:bg-slate-650 border border-slate-700 px-4[...]
+                    <svg class="w-4 h-4 text-slate-300 combiner-svg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <rect x="3" y="3" width="12" height="12" rx="2" ry="2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <rect x="9" y="9" width="12" height="12" rx="2" ry="2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span>Image Combiner</span>
+                </a>
+
+                <!-- Accessibility Contrast Switcher -->
+                <button id="contrastToggle" class="flex items-center gap-2 text-xs bg-slate-800 hover:bg-slate-700 active:bg-slate-650 border border-slate-700 px-4 py-2 rounded-full transition-all dur[...]
+                    <svg class="w-4 h-4 text-slate-300 contrast-svg" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8v16z"/>
+                    </svg>
+                    <span id="contrastToggleText">Contrast Mode</span>
+                </button>
+
+                <div class="flex items-center gap-2 text-xs bg-slate-850 px-3 py-1.5 rounded-full border border-slate-800 tracking-wide">
+                    <span class="inline-block w-2.5 h-2.5 bg-emerald-500 rounded-full animate-pulse"></span>
+                    <span class="text-slate-300 font-medium">Browser-Native processing</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow max-w-4xl w-full mx-auto px-4 py-8">
+        
+        <h1 class="text-4xl font-bold text-white mb-6">SVG Compression</h1>
+
+        <div class="space-y-6 text-slate-300">
+            <p>Hello there! A few days ago someone on Reddit asked about splitting SVG files to make them smaller than 15kb, so they can be uploaded to the internet.</p>
+
+            <p>I'll outline a few of the processes I've used in the past with a few tricks I've learned along the way.</p>
+
+            <p><strong>Disclaimer:</strong> I'm not a graphic designer; I've no experience in most of this outside of GT. I'm just an IT guy who likes making virtual stickers for video game cars.</p>
+
+            <p>I might follow up with another episode on livery design later, but to be honest there are better videos on that topic out there already. I'll link them below.</p>
+
+            <h2 class="text-2xl font-bold text-white mt-8 mb-4">What's an SVG?</h2>
+
+            <p>What's an SVG? It's a <strong>vector</strong> image format. It creates an image by combining shapes and lines.</p>
+
+            <p>What's a raster image?</p>
+
+            <h2 class="text-2xl font-bold text-white mt-8 mb-4">What makes up an SVG file?</h2>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                <div class="bg-slate-950/40 border border-slate-800 rounded-xl p-4 overflow-x-auto">
+                    <pre class="text-xs text-slate-300 font-mono"><code>&lt;svg width="400" height="400" xmlns="http://www.w3.org/2000/svg"&gt;
+  &lt;!-- Red Square --&gt;
+  &lt;path d="M 40 40 L 140 40 L 140 140 L 40 140 Z" fill="red" /&gt;
+  &lt;!-- Green Pentagon --&gt;
+  &lt;path d="M 250 40 L 310 85 L 285 155 L 215 155 L 190 85 Z" fill="green" /&gt;
+  &lt;!-- Blue Circle --&gt;
+  &lt;path d="M 100 250 A 50 50 0 1 0 99.9 250 Z" fill="blue" /&gt;
+  &lt;!-- Yellow Star --&gt;
+  &lt;path d="M 250 210 L 264 245 L 302 245 L 272 268 L 284 305 L 250 282 L 216 305 L 228 268 L 198 245 L 236 245 Z" fill="yellow" /&gt;
+&lt;/svg&gt;</code></pre>
+                </div>
+                
+                <div class="flex items-center justify-center bg-slate-950/40 border border-slate-800 rounded-xl p-4">
+                    <img src="4shapes.svg" alt="Rendered SVG containing a square, pentagon, circle, and star" class="max-w-full h-auto">
+                </div>
+            </div>
+
+            <p>The spaces and new lines aren't important; they're just there to prettify the code. Each shape has one color. We'll use that feature to split our path layers later.</p>
+
+            <h2 class="text-2xl font-bold text-white mt-8 mb-4">So you want to make a sticker?</h2>
+
+            <ol class="list-decimal list-inside space-y-3 ml-4">
+                <li><strong>Source your material.</strong> Here's a photo of a juice bottle I had on my desk. We're going to use the logo and surrounding art for our sticker.</li>
+            </ol>
+
+            <p>Autotracer is a free online image vectorizer. It can convert raster images like JPEGs, GIFs, and PNGs to scalable vector graphics (EPS, SVG, AI, and PDF). No registration or email requi[...]
+
+            <ol class="list-decimal list-inside space-y-4 ml-4" start="2">
+                <li>
+                    <strong>Open <a href="http://autotracer.org" class="text-indigo-400 hover:text-indigo-300 underline">Autotracer.org</a>.</strong> I'm recommending this as a "quick and dirty," no-t[...]
+                    <ul class="list-disc list-inside ml-6 mt-2 space-y-1">
+                        <li>Upload a file: Or enter a URL. Max. file size for upload is 6 MB. Supported file types: jpg, png, pdf, jpeg. Max. dimension: 5000x5000.</li>
+                        <li>Select output format</li>
+                        <li>Number of colors: Number of colors the image will be reduced to before it is vectorized. Range: 1-256.</li>
+                        <li>Hide advanced options</li>
+                        <li>Smoothing</li>
+                        <li>Despeckle: Active. Removes small elements. Result will be cleaner but less detailed.</li>
+                        <li>White background: Ignore. White background will not get converted to vector.</li>
+                    </ul>
+                </li>
+            </ol>
+
+            <p>The more colors you choose, the more realistic and less posterized the result will appear, but it will increase the file size. <strong>Smoothing</strong> will impact the level of detail[...]
+
+            <p>The resultant SVG has lost some fidelity, but it's still very recognizable. The file is currently 521kb, so we'd need 35 chunks to upload to the GT7 servers.</p>
+
+            <p>If we opened the file in a text editor, we see the same format as the example above, just a lot more of them. We have a header and path statements, which now include a fill and stroke s[...]
+
+            <p>Before we start slicing up the path statements into chunks, let's try to optimize it first to reduce the file size.</p>
+
+            <h2 class="text-2xl font-bold text-white mt-8 mb-4">Optimization</h2>
+
+            <p>My preference for reducing file size is <a href="http://svgomg.net" class="text-indigo-400 hover:text-indigo-300 underline">SVGOMG.net</a>.</p>
+
+            <div class="bg-slate-950/40 border border-slate-800 rounded-xl p-6 my-4">
+                <ul class="list-disc list-inside space-y-2 ml-2">
+                    <li>Once opened, uncheck the <strong>Compare gzipped</strong> option, and adjust the <strong>Number</strong> and <strong>Transform</strong> sliders until you find the right balance[...]
+                    <li>Enable <strong>Prettify Markup</strong>; it will make finding individual paths easier later. Hit the <strong>Download</strong> button to save the optimized file.</li>
+                </ul>
+            </div>
+
+            <h2 class="text-2xl font-bold text-white mt-8 mb-4">Splitting the SVG</h2>
+
+            <p>Now you'll want to create little sub-15 kilobyte files.</p>
+
+            <p>We'll do this using a script I assembled at <a href="https://cianhan.github.io/svgsplit/" class="text-indigo-400 hover:text-indigo-300 underline">https://cianhan.github.io/svgsplit/</a>[...]
+
+            <div class="bg-slate-950/40 border border-slate-800 rounded-xl p-6 my-4">
+                <ul class="list-disc list-inside space-y-2 ml-2">
+                    <li>Upload the optimized SVG file you just downloaded from SVGOMG.</li>
+                    <li>Choose a prefix for the files (I'm using <strong>miwadi</strong> in my example).</li>
+                    <li>The tool will tell you how many files have been created, the number of elements, and the average size of the files. You can also see a preview.</li>
+                    <li>Download and unzip, then upload the SVGs to the GT7 server.
+                        <ul class="list-disc list-inside ml-6 mt-1">
+                            <li><a href="https://www.gran-turismo.com/ie/gt7/user/mymenu/" class="text-indigo-400 hover:text-indigo-300 underline">https://www.gran-turismo.com/ie/gt7/user/mymenu/</a><[...]
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+            <p class="text-lg font-semibold mt-8">#MakeSomething</p>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-950 border-t border-slate-850 py-6 mt-12 text-center text-xs text-slate-500 transition-all duration-200">
+        <p>© 2026 Web SVG Path Splitter • Free & Open Source utility</p>
+    </footer>
+
+    <!-- Custom Styling for High Contrast Accessibility -->
+    <style>
+        /* --- ACCESSIBLE HIGH CONTRAST MODE STYLES --- */
+        body.high-contrast {
+            background-color: #000000 !important;
+            color: #ffffff !important;
+        }
+        body.high-contrast header {
+            background-color: #000000 !important;
+            border-bottom: 3px solid #ffffff !important;
+        }
+        body.high-contrast footer {
+            background-color: #000000 !important;
+            border-top: 3px solid #ffffff !important;
+        }
+        body.high-contrast .bg-slate-950\/40, 
+        body.high-contrast .bg-slate-900\/50,
+        body.high-contrast .bg-slate-900,
+        body.high-contrast .bg-slate-950\/20,
+        body.high-contrast .bg-indigo-950\/30,
+        body.high-contrast .bg-slate-950,
+        body.high-contrast .bg-slate-850 {
+            background-color: #000000 !important;
+            background-image: none !important;
+            border: 3px solid #ffffff !important;
+        }
+        body.high-contrast .border,
+        body.high-contrast .border-b,
+        body.high-contrast .border-2,
+        body.high-contrast .border-slate-800,
+        body.high-contrast .border-slate-850 {
+            border-color: #ffffff !important;
+            border-width: 2px !important;
+        }
+        body.high-contrast p,
+        body.high-contrast h1,
+        body.high-contrast h2,
+        body.high-contrast h3,
+        body.high-contrast h4,
+        body.high-contrast h5,
+        body.high-contrast h6,
+        body.high-contrast span,
+        body.high-contrast label,
+        body.high-contrast code,
+        body.high-contrast div,
+        body.high-contrast li {
+            color: #ffffff !important;
+        }
+        body.high-contrast .section-title,
+        body.high-contrast .rule-label,
+        body.high-contrast .stat-header,
+        body.high-contrast .text-indigo-400,
+        body.high-contrast .text-indigo-300\/60,
+        body.high-contrast .text-slate-400 {
+            color: #ffff00 !important; /* Highly visible accessible neon yellow */
+        }
+        body.high-contrast a {
+            color: #ffff00 !important;
+        }
+        body.high-contrast button {
+            background-color: #000000 !important;
+            color: #ffffff !important;
+            border: 3px solid #ffffff !important;
+            font-weight: 800 !important;
+        }
+        body.high-contrast button:hover {
+            background-color: #ffffff !important;
+            color: #000000 !important;
+            border-color: #ffffff !important;
+        }
+        body.high-contrast svg.contrast-svg {
+            color: #ffff00 !important;
+        }
+        body.high-contrast svg path,
+        body.high-contrast svg line,
+        body.high-contrast svg polyline,
+        body.high-contrast svg rect,
+        body.high-contrast svg circle {
+            stroke: #ffffff !important;
+        }
+        /* High Contrast overrides for the Guide Link */
+        body.high-contrast .guide-link {
+            background-color: #000000 !important;
+            color: #ffff00 !important;
+            border: 3px solid #ffffff !important;
+        }
+        body.high-contrast .guide-link:hover {
+            background-color: #ffffff !important;
+            color: #000000 !important;
+            border-color: #ffffff !important;
+        }
+        body.high-contrast .guide-link:hover .guide-svg {
+            color: #000000 !important;
+        }
+
+        /* High Contrast overrides for the Combiner Link */
+        body.high-contrast .combiner-link {
+            background-color: #000000 !important;
+            color: #ffff00 !important;
+            border: 3px solid #ffffff !important;
+        }
+        body.high-contrast .combiner-link:hover {
+            background-color: #ffffff !important;
+            color: #000000 !important;
+            border-color: #ffffff !important;
+        }
+        body.high-contrast .combiner-link:hover .combiner-svg {
+            color: #000000 !important;
+        }
+    </style>
+
+    <!-- Contrast Mode Toggle Logic -->
+    <script>
+        const contrastToggle = document.getElementById('contrastToggle');
+        const contrastToggleText = document.getElementById('contrastToggleText');
+
+        contrastToggle.addEventListener('click', () => {
+            const isHighContrast = document.body.classList.toggle('high-contrast');
+            contrastToggleText.textContent = isHighContrast ? "Default Contrast" : "Contrast Mode";
+            
+            if (isHighContrast) {
+                contrastToggle.classList.add('bg-white', 'text-black', 'border-white');
+                contrastToggle.classList.remove('bg-slate-800', 'text-slate-200', 'border-slate-700');
+            } else {
+                contrastToggle.classList.remove('bg-white', 'text-black', 'border-white');
+                contrastToggle.classList.add('bg-slate-800', 'text-slate-200', 'border-slate-700');
+            }
+        });
+    </script>
+
+</body>
+</html>
